@@ -1,0 +1,1673 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FitFlow — Consistência no seu treino</title>
+    <meta
+      name="description"
+      content="FitFlow: conheça modalidades de treino, organize sua rotina e mantenha a consistência. Projeto demonstrativo."
+    />
+    <meta name="theme-color" content="#111411" />
+
+    <!-- Fonte externa (única dependência). Se falhar, o font-stack do CSS assume. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* =====================================================================
+       1. VARIÁVEIS GLOBAIS (DESIGN SYSTEM)
+       Todas as decisões visuais ficam aqui. Os componentes usam var(--nome).
+       Mudou o valor aqui? Muda em toda a página, sem mexer em cada componente.
+       ===================================================================== */
+      :root {
+        /* --- Cores --- */
+        --color-bg: #111411; /* fundo da página */
+        --color-surface: #1c211d; /* cards e superfícies */
+        --color-surface-hover: #232a24; /* card em hover */
+        --color-primary: #c6f36b; /* destaque (botões, ícones) */
+        --color-primary-hover: #d7f98f; /* destaque em hover */
+        --color-on-primary: #111411; /* texto sobre o destaque (contraste) */
+        --color-text: #f4f5f0; /* texto principal */
+        --color-text-muted: #a7aea5; /* texto secundário */
+        --color-border: #2e352f; /* bordas sutis */
+        --color-focus: #c6f36b; /* anel de foco do teclado */
+        --color-success: #7ddc8f; /* mensagens de sucesso */
+        --color-error: #ff8f85; /* mensagens de erro */
+
+        /* --- Tipografia --- */
+        --font-body:
+          "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial,
+          sans-serif;
+        --font-weight-regular: 400;
+        --font-weight-medium: 500;
+        --font-weight-semibold: 600;
+        --font-weight-bold: 700;
+        --font-weight-extrabold: 800;
+        /* clamp(mínimo, ideal, máximo): o texto cresce com a tela, dentro de limites */
+        --font-size-h1: clamp(2.25rem, 6vw, 4rem);
+        --font-size-h2: clamp(1.75rem, 4vw, 2.5rem);
+        --font-size-h3: 1.25rem;
+        --font-size-body: 1rem;
+        --font-size-small: 0.875rem;
+        --font-size-caption: 0.8125rem;
+        --line-height-tight: 1.15;
+        --line-height-body: 1.6;
+
+        /* --- Espaçamentos --- */
+        --space-xs: 0.5rem;
+        --space-sm: 0.75rem;
+        --space-md: 1rem;
+        --space-lg: 1.5rem;
+        --space-xl: 2.5rem;
+        --space-section: clamp(
+          4rem,
+          9vw,
+          7rem
+        ); /* respiro vertical entre seções */
+        --space-card: 1.5rem; /* padding interno dos cards */
+
+        /* --- Dimensões e efeitos --- */
+        --container-width: 1120px;
+        --radius-sm: 8px;
+        --radius-card: 16px;
+        --radius-pill: 999px;
+        --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.35);
+        --transition: 200ms ease;
+        --header-height: 4.25rem;
+        --control-height: 3rem; /* altura de botões e campos */
+      }
+
+      /* =====================================================================
+       2. RESET E ESTILOS GLOBAIS
+       ===================================================================== */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      } /* padding não aumenta a largura */
+      * {
+        margin: 0;
+      }
+      ul,
+      ol {
+        padding: 0;
+        list-style: none;
+      }
+      img,
+      svg {
+        display: block;
+        max-width: 100%;
+      } /* imagens fluidas */
+      button,
+      input,
+      select {
+        font: inherit;
+        color: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--color-bg);
+        color: var(--color-text);
+        font-family: var(--font-body);
+        font-size: var(--font-size-body);
+        font-weight: var(--font-weight-regular);
+        line-height: var(--line-height-body);
+        -webkit-font-smoothing: antialiased;
+      }
+      /* Evita que o cabeçalho fixo cubra o título quando clicamos num link âncora */
+      section[id] {
+        scroll-margin-top: var(--header-height);
+      }
+
+      /* =====================================================================
+       3. TIPOGRAFIA E ELEMENTOS BÁSICOS
+       ===================================================================== */
+      h1,
+      h2,
+      h3 {
+        line-height: var(--line-height-tight);
+        letter-spacing: -0.02em;
+      }
+      h1 {
+        font-size: var(--font-size-h1);
+        font-weight: var(--font-weight-extrabold);
+      }
+      h2 {
+        font-size: var(--font-size-h2);
+        font-weight: var(--font-weight-bold);
+      }
+      h3 {
+        font-size: var(--font-size-h3);
+        font-weight: var(--font-weight-semibold);
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      /* =====================================================================
+       4. UTILITÁRIOS E COMPONENTES REUTILIZÁVEIS
+       ===================================================================== */
+      /* Centraliza o conteúdo com largura máxima e margem lateral */
+      .container {
+        width: min(100% - 2 * var(--space-lg), var(--container-width));
+        margin-inline: auto;
+      }
+
+      /* Toda seção usa o mesmo espaçamento vertical */
+      .section {
+        padding-block: var(--space-section);
+      }
+      .section--alt {
+        background: var(--color-surface);
+      }
+
+      .section-header {
+        max-width: 40rem;
+        margin-bottom: var(--space-xl);
+      }
+      .section-title {
+        margin-bottom: var(--space-sm);
+      }
+      .section-description {
+        color: var(--color-text-muted);
+      }
+      .text-muted {
+        color: var(--color-text-muted);
+      }
+
+      .eyebrow {
+        /* pequeno rótulo acima dos títulos */
+        display: inline-block;
+        margin-bottom: var(--space-sm);
+        color: var(--color-primary);
+        font-size: var(--font-size-caption);
+        font-weight: var(--font-weight-semibold);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      /* CSS Grid: 1 coluna no celular; as media queries aumentam as colunas */
+      .grid {
+        display: grid;
+        gap: var(--space-lg);
+      }
+
+      /* Botões: base + modificadores (--primary, --secondary) */
+      .button {
+        display: inline-flex; /* Flexbox centraliza o texto */
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-xs);
+        min-height: var(--control-height);
+        padding: 0 var(--space-lg);
+        border: 1px solid transparent;
+        border-radius: var(--radius-pill);
+        font-size: var(--font-size-body);
+        font-weight: var(--font-weight-semibold);
+        transition:
+          background var(--transition),
+          border-color var(--transition),
+          transform var(--transition);
+      }
+      .button:active {
+        transform: translateY(1px);
+      }
+      .button--primary {
+        background: var(--color-primary);
+        color: var(--color-on-primary);
+      }
+      .button--primary:hover {
+        background: var(--color-primary-hover);
+      }
+      .button--secondary {
+        border-color: var(--color-border);
+        color: var(--color-text);
+      }
+      .button--secondary:hover {
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+      }
+      .button--small {
+        min-height: 2.5rem;
+        padding: 0 var(--space-md);
+        font-size: var(--font-size-small);
+      }
+
+      /* Card: base compartilhada por benefícios, modalidades e etapas */
+      .card {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-card);
+        padding: var(--space-card);
+        transition:
+          background var(--transition),
+          border-color var(--transition);
+      }
+      .section--alt .card {
+        background: var(--color-bg);
+      } /* contraste em fundo alternativo */
+      .card:hover {
+        border-color: var(--color-primary);
+      }
+
+      /* Caixa que guarda um ícone SVG */
+      .icon-box {
+        display: grid;
+        place-items: center;
+        width: 3rem;
+        height: 3rem;
+        margin-bottom: var(--space-md);
+        border-radius: var(--radius-sm);
+        background: rgba(198, 243, 107, 0.12);
+        color: var(--color-primary);
+      }
+      .icon-box svg {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+
+      /* Texto só para leitores de tela */
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+      }
+
+      /* =====================================================================
+       5. CABEÇALHO E NAVEGAÇÃO (mobile-first)
+       ===================================================================== */
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: rgba(17, 20, 17, 0.92);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--color-border);
+      }
+      .site-header__inner {
+        /* Flexbox: logo à esquerda, ações à direita */
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: var(--header-height);
+        gap: var(--space-md);
+      }
+      .logo {
+        font-size: 1.375rem;
+        font-weight: var(--font-weight-extrabold);
+        letter-spacing: -0.03em;
+      }
+      .logo span {
+        color: var(--color-primary);
+      }
+
+      .nav__toggle {
+        /* botão "hambúrguer" (só no mobile) */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.75rem;
+        height: 2.75rem;
+        background: transparent;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-sm);
+      }
+      .nav__toggle svg {
+        width: 1.375rem;
+        height: 1.375rem;
+      }
+
+      /* No mobile a lista fica escondida e aparece quando JS adiciona .is-open */
+      .nav__list {
+        display: none;
+        position: absolute;
+        top: var(--header-height);
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        padding: var(--space-md) var(--space-lg) var(--space-lg);
+        background: var(--color-bg);
+        border-bottom: 1px solid var(--color-border);
+      }
+      .nav__list.is-open {
+        display: flex;
+      }
+      .nav__link {
+        display: block;
+        padding: var(--space-sm) 0;
+        color: var(--color-text-muted);
+        font-weight: var(--font-weight-medium);
+        transition: color var(--transition);
+      }
+      .nav__link:hover {
+        color: var(--color-primary);
+      }
+      .header-cta {
+        display: none;
+      } /* o CTA do cabeçalho aparece só em telas maiores */
+
+      /* =====================================================================
+       6. SEÇÕES
+       ===================================================================== */
+      /* --- Hero --- */
+      .hero {
+        padding-block: var(--space-xl) var(--space-section);
+      }
+      .hero__inner {
+        display: grid;
+        gap: var(--space-xl);
+        align-items: center;
+      }
+      .hero__title span {
+        color: var(--color-primary);
+      }
+      .hero__subtitle {
+        margin-block: var(--space-lg);
+        max-width: 34rem;
+        font-size: 1.125rem;
+      }
+      .hero__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-md);
+      }
+      .hero__visual {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-card);
+        box-shadow: var(--shadow-card);
+        padding: var(--space-md);
+      }
+      .hero__visual svg {
+        width: 100%;
+        height: auto;
+      }
+      .hero__caption {
+        margin-top: var(--space-sm);
+        font-size: var(--font-size-caption);
+      }
+
+      /* --- Benefícios --- */
+      .benefit h3 {
+        margin-bottom: var(--space-xs);
+      }
+      .benefit p {
+        color: var(--color-text-muted);
+        font-size: var(--font-size-small);
+      }
+
+      /* --- Modalidades (cards interativos) --- */
+      .modality__visual {
+        display: grid;
+        place-items: center;
+        height: 7rem;
+        margin-bottom: var(--space-md);
+        border-radius: var(--radius-sm);
+        background: var(--color-bg);
+        color: var(--color-primary);
+      }
+      .modality__visual svg {
+        width: 3.5rem;
+        height: 3.5rem;
+      }
+      .modality h3 {
+        margin-bottom: var(--space-xs);
+      }
+      .modality__summary {
+        color: var(--color-text-muted);
+        margin-bottom: var(--space-md);
+      }
+      .modality__details {
+        margin-bottom: var(--space-md);
+        padding: var(--space-md);
+        border-left: 3px solid var(--color-primary);
+        background: rgba(198, 243, 107, 0.06);
+        border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        font-size: var(--font-size-small);
+        animation: fade-in var(--transition);
+      }
+      .modality__details li + li {
+        margin-top: var(--space-xs);
+      }
+
+      /* Botão que abre/fecha (usado nos cards e no FAQ). O ícone gira conforme aria-expanded */
+      .toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-xs);
+        background: none;
+        border: 0;
+        padding: 0;
+        color: var(--color-primary);
+        font-weight: var(--font-weight-semibold);
+      }
+      .toggle__icon {
+        width: 1.125rem;
+        height: 1.125rem;
+        transition: transform var(--transition);
+      }
+      .toggle[aria-expanded="true"] .toggle__icon {
+        transform: rotate(180deg);
+      }
+
+      /* --- Como funciona --- */
+      .steps {
+        counter-reset: step;
+      } /* contador CSS numera automaticamente */
+      .step {
+        counter-increment: step;
+      }
+      .step::before {
+        content: counter(step);
+        display: grid;
+        place-items: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        margin-bottom: var(--space-md);
+        border-radius: 50%;
+        background: var(--color-primary);
+        color: var(--color-on-primary);
+        font-weight: var(--font-weight-extrabold);
+      }
+      .step h3 {
+        margin-bottom: var(--space-xs);
+      }
+      .step p {
+        color: var(--color-text-muted);
+        font-size: var(--font-size-small);
+      }
+
+      /* --- Chamada para ação --- */
+      .cta-box {
+        padding: var(--space-xl) var(--space-lg);
+        text-align: center;
+        background: var(--color-primary);
+        color: var(--color-on-primary);
+        border-radius: var(--radius-card);
+      }
+      .cta-box p {
+        max-width: 34rem;
+        margin: var(--space-sm) auto var(--space-lg);
+      }
+      .cta-box .button {
+        background: var(--color-bg);
+        color: var(--color-text);
+      }
+      .cta-box .button:hover {
+        background: var(--color-surface);
+      }
+
+      /* --- FAQ --- */
+      .faq {
+        max-width: 46rem;
+        display: grid;
+        gap: var(--space-sm);
+      }
+      .faq__item {
+        padding: 0;
+      }
+      .faq__question {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--space-md);
+        padding: var(--space-md) var(--space-card);
+        background: none;
+        border: 0;
+        text-align: left;
+        font-weight: var(--font-weight-semibold);
+      }
+      .faq__question .toggle__icon {
+        flex-shrink: 0;
+        color: var(--color-primary);
+      }
+      .faq__question[aria-expanded="true"] .toggle__icon {
+        transform: rotate(180deg);
+      }
+      .faq__answer {
+        padding: 0 var(--space-card) var(--space-md);
+        color: var(--color-text-muted);
+        animation: fade-in var(--transition);
+      }
+
+      /* =====================================================================
+       7. FORMULÁRIO E MENSAGENS DE VALIDAÇÃO
+       ===================================================================== */
+      .form {
+        display: grid;
+        gap: var(--space-lg);
+        max-width: 34rem;
+      }
+      .form-field {
+        display: grid;
+        gap: var(--space-xs);
+      }
+      .form-field label {
+        font-weight: var(--font-weight-medium);
+      }
+      .form-control {
+        width: 100%;
+        min-height: var(--control-height);
+        padding: 0 var(--space-md);
+        background: var(--color-bg);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-sm);
+        transition: border-color var(--transition);
+      }
+      .form-control:hover {
+        border-color: var(--color-text-muted);
+      }
+      .form-control.is-invalid {
+        border-color: var(--color-error);
+      }
+      .form-check {
+        display: flex;
+        gap: var(--space-sm);
+        align-items: flex-start;
+      }
+      .form-check input {
+        width: 1.25rem;
+        height: 1.25rem;
+        margin-top: 0.2rem;
+        accent-color: var(--color-primary);
+        flex-shrink: 0;
+      }
+      .field-error {
+        min-height: 1.25rem;
+        color: var(--color-error);
+        font-size: var(--font-size-small);
+      }
+      /* O erro usa ícone + texto (não depende só da cor) */
+      .field-error:not(:empty)::before {
+        content: "⚠ ";
+      }
+      .form-status {
+        padding: var(--space-md);
+        border: 1px solid;
+        border-radius: var(--radius-sm);
+        font-weight: var(--font-weight-medium);
+      }
+      .form-status.is-success {
+        color: var(--color-success);
+        border-color: var(--color-success);
+      }
+      .form-status.is-error {
+        color: var(--color-error);
+        border-color: var(--color-error);
+      }
+      .form-note {
+        font-size: var(--font-size-caption);
+      }
+
+      /* =====================================================================
+       8. RODAPÉ
+       ===================================================================== */
+      .site-footer {
+        padding-block: var(--space-xl);
+        border-top: 1px solid var(--color-border);
+      }
+      .site-footer__inner {
+        display: grid;
+        gap: var(--space-lg);
+      }
+      .footer-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-md) var(--space-lg);
+      }
+      .footer-links a {
+        color: var(--color-text-muted);
+        transition: color var(--transition);
+      }
+      .footer-links a:hover {
+        color: var(--color-primary);
+      }
+
+      /* =====================================================================
+       9. MEDIA QUERIES (mobile-first: o base vale para celular,
+          e min-width adiciona regras conforme a tela cresce)
+       ===================================================================== */
+      @media (min-width: 640px) {
+        .grid--2,
+        .grid--4 {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .grid--3 {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .cta-box {
+          padding: var(--space-xl) calc(var(--space-xl) * 2);
+        }
+      }
+
+      @media (min-width: 900px) {
+        /* Menu vira horizontal: esconde o hambúrguer e mostra a lista em linha */
+        .nav__toggle {
+          display: none;
+        }
+        .nav__list {
+          display: flex;
+          position: static;
+          flex-direction: row;
+          gap: var(--space-lg);
+          padding: 0;
+          background: none;
+          border: 0;
+        }
+        .nav__link {
+          padding: 0;
+        }
+        .header-cta {
+          display: inline-flex;
+        }
+
+        .hero__inner {
+          grid-template-columns: 1.1fr 0.9fr;
+        } /* texto + imagem lado a lado */
+        .grid--3 {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .grid--4 {
+          grid-template-columns: repeat(4, 1fr);
+        }
+        .site-footer__inner {
+          grid-template-columns: 1.5fr 1fr;
+          align-items: start;
+        }
+      }
+
+      /* =====================================================================
+       10. ACESSIBILIDADE E MOVIMENTO REDUZIDO
+       ===================================================================== */
+      /* :focus-visible mostra o anel apenas na navegação por teclado */
+      :focus-visible {
+        outline: 3px solid var(--color-focus);
+        outline-offset: 3px;
+      }
+      .button--primary:focus-visible,
+      .cta-box .button:focus-visible {
+        outline-color: var(--color-text);
+      }
+
+      @keyframes fade-in {
+        from {
+          opacity: 0;
+          transform: translateY(-4px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      /* Quem pede menos movimento no sistema operacional não vê animações */
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation: none !important;
+          transition: none !important;
+        }
+        html {
+          scroll-behavior: auto;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ====================== CABEÇALHO ====================== -->
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <a href="#inicio" class="logo" aria-label="FitFlow, ir para o início"
+          >Fit<span>Flow</span></a
+        >
+
+        <!-- aria-label diferencia esta <nav> de outras navegações da página -->
+        <nav aria-label="Principal">
+          <!-- aria-expanded e aria-controls informam ao leitor de tela o estado do menu -->
+          <button
+            class="nav__toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="menu-principal"
+            aria-label="Abrir menu"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
+              <path d="M4 7h16M4 12h16M4 17h16" />
+            </svg>
+          </button>
+          <ul class="nav__list" id="menu-principal">
+            <li><a class="nav__link" href="#beneficios">Benefícios</a></li>
+            <li><a class="nav__link" href="#modalidades">Modalidades</a></li>
+            <li>
+              <a class="nav__link" href="#como-funciona">Como funciona</a>
+            </li>
+            <li><a class="nav__link" href="#faq">Perguntas</a></li>
+          </ul>
+        </nav>
+
+        <a
+          href="#interesse"
+          class="button button--primary button--small header-cta"
+          >Quero testar</a
+        >
+      </div>
+    </header>
+
+    <main id="inicio">
+      <!-- ====================== HERO ====================== -->
+      <section class="hero" aria-labelledby="hero-titulo">
+        <div class="container hero__inner">
+          <div>
+            <span class="eyebrow">Plataforma fictícia de fitness</span>
+            <h1 id="hero-titulo" class="hero__title">
+              Seu próximo nível começa com <span>consistência.</span>
+            </h1>
+            <p class="hero__subtitle text-muted">
+              Conheça modalidades de treino, organize sua rotina e acompanhe seu
+              ritmo semana após semana, sem complicação.
+            </p>
+            <div class="hero__actions">
+              <a href="#interesse" class="button button--primary"
+                >Quero conhecer</a
+              >
+              <a href="#modalidades" class="button button--secondary"
+                >Ver modalidades</a
+              >
+            </div>
+          </div>
+
+          <!-- Imagem: SVG inline (sem arquivo externo). role="img" + aria-label fazem o papel do alt -->
+          <figure class="hero__visual">
+            <svg
+              viewBox="0 0 400 300"
+              role="img"
+              aria-label="Ilustração de um painel com anel de progresso e barras de treino ao longo da semana"
+            >
+              <circle
+                cx="110"
+                cy="105"
+                r="62"
+                fill="none"
+                stroke="#2E352F"
+                stroke-width="14"
+              />
+              <circle
+                cx="110"
+                cy="105"
+                r="62"
+                fill="none"
+                stroke="#C6F36B"
+                stroke-width="14"
+                stroke-linecap="round"
+                stroke-dasharray="290 390"
+                transform="rotate(-90 110 105)"
+              />
+              <path
+                d="M92 105h12l8-18 10 36 8-18h12"
+                fill="none"
+                stroke="#F4F5F0"
+                stroke-width="5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <text
+                x="220"
+                y="80"
+                fill="#F4F5F0"
+                font-size="20"
+                font-weight="700"
+              >
+                Sua semana
+              </text>
+              <text x="220" y="104" fill="#A7AEA5" font-size="13">
+                Exemplo ilustrativo
+              </text>
+              <g fill="#2E352F">
+                <rect x="30" y="210" width="34" height="50" rx="6" />
+                <rect
+                  x="82"
+                  y="190"
+                  width="34"
+                  height="70"
+                  rx="6"
+                  fill="#C6F36B"
+                />
+                <rect x="134" y="225" width="34" height="35" rx="6" />
+                <rect
+                  x="186"
+                  y="170"
+                  width="34"
+                  height="90"
+                  rx="6"
+                  fill="#C6F36B"
+                />
+                <rect x="238" y="200" width="34" height="60" rx="6" />
+                <rect
+                  x="290"
+                  y="180"
+                  width="34"
+                  height="80"
+                  rx="6"
+                  fill="#C6F36B"
+                />
+                <rect x="342" y="235" width="34" height="25" rx="6" />
+              </g>
+            </svg>
+            <figcaption class="hero__caption text-muted">
+              Ilustração demonstrativa. Os dados não são reais.
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- ====================== BENEFÍCIOS ====================== -->
+      <section
+        class="section section--alt"
+        id="beneficios"
+        aria-labelledby="beneficios-titulo"
+      >
+        <div class="container">
+          <div class="section-header">
+            <span class="eyebrow">Benefícios</span>
+            <h2 id="beneficios-titulo" class="section-title">
+              Tudo para manter o ritmo
+            </h2>
+            <p class="section-description">
+              Ferramentas simples para você treinar com mais clareza e menos
+              improviso.
+            </p>
+          </div>
+
+          <!-- .grid + .grid--4: o mesmo componente de grade serve para qualquer lista de cards -->
+          <div class="grid grid--4">
+            <article class="card benefit">
+              <div class="icon-box">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <rect x="4" y="5" width="16" height="15" rx="2" />
+                  <path d="M8 3v4M16 3v4M4 10h16" />
+                </svg>
+              </div>
+              <h3>Treinos organizados</h3>
+              <p>Planeje seus dias de treino em um só lugar.</p>
+            </article>
+            <article class="card benefit">
+              <div class="icon-box">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <rect x="3" y="3" width="7" height="7" rx="1" />
+                  <rect x="14" y="3" width="7" height="7" rx="1" />
+                  <rect x="3" y="14" width="7" height="7" rx="1" />
+                  <rect x="14" y="14" width="7" height="7" rx="1" />
+                </svg>
+              </div>
+              <h3>Modalidades variadas</h3>
+              <p>Explore diferentes estilos até achar o seu.</p>
+            </article>
+            <article class="card benefit">
+              <div class="icon-box">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M4 12a8 8 0 0 1 14-5l2 2M20 12a8 8 0 0 1-14 5l-2-2"
+                  />
+                  <path d="M20 4v5h-5M4 20v-5h5" />
+                </svg>
+              </div>
+              <h3>Rotina adaptável</h3>
+              <p>Ajuste o plano quando a semana mudar.</p>
+            </article>
+            <article class="card benefit">
+              <div class="icon-box">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />
+                </svg>
+              </div>
+              <h3>Consistência visível</h3>
+              <p>Acompanhe sua frequência sem cobranças.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================== MODALIDADES ====================== -->
+      <section
+        class="section"
+        id="modalidades"
+        aria-labelledby="modalidades-titulo"
+      >
+        <div class="container">
+          <div class="section-header">
+            <span class="eyebrow">Modalidades</span>
+            <h2 id="modalidades-titulo" class="section-title">
+              Escolha como se movimentar
+            </h2>
+            <p class="section-description">
+              Toque ou use o teclado para ver mais detalhes de cada modalidade.
+            </p>
+          </div>
+
+          <div class="grid grid--3">
+            <!-- O botão .toggle aponta (aria-controls) para o painel que ele abre. O JS cuida do resto. -->
+            <article class="card modality">
+              <div class="modality__visual">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M2 12h2M20 12h2M5 8v8M8 6v12M16 6v12M19 8v8M8 12h8"
+                  />
+                </svg>
+              </div>
+              <h3>Força e musculação</h3>
+              <p class="modality__summary">
+                Treinos com cargas e repetições para ganhar força de forma
+                progressiva.
+              </p>
+              <div class="modality__details" id="detalhes-forca" hidden>
+                <ul>
+                  <li><strong>Foco:</strong> força e resistência muscular.</li>
+                  <li>
+                    <strong>Formato:</strong> séries e repetições, com descanso
+                    entre elas.
+                  </li>
+                  <li>
+                    <strong>Bom para:</strong> quem quer progressão gradual.
+                  </li>
+                </ul>
+              </div>
+              <button
+                class="toggle"
+                type="button"
+                aria-expanded="false"
+                aria-controls="detalhes-forca"
+                data-label-collapsed="Ver detalhes"
+                data-label-expanded="Ocultar detalhes"
+              >
+                <span class="toggle__text">Ver detalhes</span>
+                <svg
+                  class="toggle__icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </button>
+            </article>
+
+            <article class="card modality">
+              <div class="modality__visual">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M13 2 4 14h7l-1 8 9-12h-7z" />
+                </svg>
+              </div>
+              <h3>Condicionamento físico</h3>
+              <p class="modality__summary">
+                Atividades que elevam o ritmo cardíaco e melhoram o fôlego no
+                dia a dia.
+              </p>
+              <div
+                class="modality__details"
+                id="detalhes-condicionamento"
+                hidden
+              >
+                <ul>
+                  <li>
+                    <strong>Foco:</strong> resistência cardiorrespiratória.
+                  </li>
+                  <li>
+                    <strong>Formato:</strong> circuitos, corrida leve ou
+                    intervalos.
+                  </li>
+                  <li>
+                    <strong>Bom para:</strong> quem busca energia e disposição.
+                  </li>
+                </ul>
+              </div>
+              <button
+                class="toggle"
+                type="button"
+                aria-expanded="false"
+                aria-controls="detalhes-condicionamento"
+                data-label-collapsed="Ver detalhes"
+                data-label-expanded="Ocultar detalhes"
+              >
+                <span class="toggle__text">Ver detalhes</span>
+                <svg
+                  class="toggle__icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </button>
+            </article>
+
+            <article class="card modality">
+              <div class="modality__visual">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="5" r="2" />
+                  <path d="M12 7v6M5 10l7 3 7-3M9 21l3-8 3 8" />
+                </svg>
+              </div>
+              <h3>Mobilidade e flexibilidade</h3>
+              <p class="modality__summary">
+                Movimentos que ampliam a amplitude das articulações e ajudam na
+                recuperação.
+              </p>
+              <div class="modality__details" id="detalhes-mobilidade" hidden>
+                <ul>
+                  <li>
+                    <strong>Foco:</strong> amplitude de movimento e relaxamento.
+                  </li>
+                  <li>
+                    <strong>Formato:</strong> alongamentos e sequências
+                    controladas.
+                  </li>
+                  <li>
+                    <strong>Bom para:</strong> complementar outros treinos.
+                  </li>
+                </ul>
+              </div>
+              <button
+                class="toggle"
+                type="button"
+                aria-expanded="false"
+                aria-controls="detalhes-mobilidade"
+                data-label-collapsed="Ver detalhes"
+                data-label-expanded="Ocultar detalhes"
+              >
+                <span class="toggle__text">Ver detalhes</span>
+                <svg
+                  class="toggle__icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </button>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================== COMO FUNCIONA ====================== -->
+      <section
+        class="section section--alt"
+        id="como-funciona"
+        aria-labelledby="como-titulo"
+      >
+        <div class="container">
+          <div class="section-header">
+            <span class="eyebrow">Como funciona</span>
+            <h2 id="como-titulo" class="section-title">Três passos simples</h2>
+          </div>
+          <!-- <ol> porque a ordem importa; o número vem do contador CSS (.step::before) -->
+          <ol class="grid grid--3 steps">
+            <li class="card step">
+              <h3>Defina seu objetivo</h3>
+              <p>
+                Diga o que você quer alcançar: ganhar força, ter mais fôlego ou
+                se mover melhor.
+              </p>
+            </li>
+            <li class="card step">
+              <h3>Explore modalidades</h3>
+              <p>
+                Veja opções compatíveis com o tempo e a rotina que você tem.
+              </p>
+            </li>
+            <li class="card step">
+              <h3>Organize e acompanhe</h3>
+              <p>Monte sua semana de treinos e acompanhe sua consistência.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ====================== CHAMADA PARA AÇÃO ====================== -->
+      <section class="section" aria-labelledby="cta-titulo">
+        <div class="container">
+          <div class="cta-box">
+            <h2 id="cta-titulo">Pronto para começar com leveza?</h2>
+            <p>
+              Deixe seu interesse no formulário abaixo. É uma demonstração, sem
+              cadastro real.
+            </p>
+            <a href="#interesse" class="button">Ir para o formulário</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================== FAQ ====================== -->
+      <section
+        class="section section--alt"
+        id="faq"
+        aria-labelledby="faq-titulo"
+      >
+        <div class="container">
+          <div class="section-header">
+            <span class="eyebrow">Perguntas frequentes</span>
+            <h2 id="faq-titulo" class="section-title">Ficou com dúvida?</h2>
+          </div>
+
+          <div class="faq">
+            <!-- Cada pergunta é um <button> (acessível por teclado) ligado à resposta por aria-controls -->
+            <div class="card faq__item">
+              <h3>
+                <button
+                  class="faq__question"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls="faq-1"
+                >
+                  O FitFlow é uma plataforma real?
+                  <svg
+                    class="toggle__icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                </button>
+              </h3>
+              <div class="faq__answer" id="faq-1" hidden>
+                Não. O FitFlow é um projeto fictício criado para estudo de
+                front-end.
+              </div>
+            </div>
+            <div class="card faq__item">
+              <h3>
+                <button
+                  class="faq__question"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls="faq-2"
+                >
+                  Preciso ter experiência para começar?
+                  <svg
+                    class="toggle__icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                </button>
+              </h3>
+              <div class="faq__answer" id="faq-2" hidden>
+                Não. A ideia da proposta é ajudar tanto quem está começando
+                quanto quem já treina.
+              </div>
+            </div>
+            <div class="card faq__item">
+              <h3>
+                <button
+                  class="faq__question"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls="faq-3"
+                >
+                  Posso mudar minha rotina depois?
+                  <svg
+                    class="toggle__icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                </button>
+              </h3>
+              <div class="faq__answer" id="faq-3" hidden>
+                Sim. A proposta é uma rotina adaptável, que acompanha as
+                mudanças da sua semana.
+              </div>
+            </div>
+            <div class="card faq__item">
+              <h3>
+                <button
+                  class="faq__question"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls="faq-4"
+                >
+                  O formulário envia meus dados?
+                  <svg
+                    class="toggle__icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                </button>
+              </h3>
+              <div class="faq__answer" id="faq-4" hidden>
+                Não. É apenas uma demonstração local: nada é enviado a servidor
+                nem armazenado.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================== FORMULÁRIO ====================== -->
+      <section
+        class="section"
+        id="interesse"
+        aria-labelledby="interesse-titulo"
+      >
+        <div class="container">
+          <div class="section-header">
+            <span class="eyebrow">Formulário de interesse</span>
+            <h2 id="interesse-titulo" class="section-title">
+              Conte o que você procura
+            </h2>
+            <p class="section-description">
+              Demonstração local: os dados não saem do seu navegador.
+            </p>
+          </div>
+
+          <!-- novalidate desliga as mensagens nativas do navegador para usarmos as nossas -->
+          <form class="form" id="form-interesse" novalidate>
+            <div class="form-field">
+              <label for="nome">Nome</label>
+              <input
+                class="form-control"
+                type="text"
+                id="nome"
+                name="nome"
+                autocomplete="name"
+                required
+                aria-describedby="nome-erro"
+              />
+              <span class="field-error" id="nome-erro"></span>
+            </div>
+
+            <div class="form-field">
+              <label for="email">E-mail</label>
+              <input
+                class="form-control"
+                type="email"
+                id="email"
+                name="email"
+                autocomplete="email"
+                required
+                aria-describedby="email-erro"
+              />
+              <span class="field-error" id="email-erro"></span>
+            </div>
+
+            <div class="form-field">
+              <label for="objetivo">Objetivo de treino</label>
+              <select
+                class="form-control"
+                id="objetivo"
+                name="objetivo"
+                required
+                aria-describedby="objetivo-erro"
+              >
+                <option value="">Selecione uma opção</option>
+                <option value="forca">Ganhar força</option>
+                <option value="condicionamento">
+                  Melhorar o condicionamento
+                </option>
+                <option value="mobilidade">Ganhar mobilidade</option>
+                <option value="rotina">Criar uma rotina constante</option>
+              </select>
+              <span class="field-error" id="objetivo-erro"></span>
+            </div>
+
+            <div class="form-field">
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  id="consentimento"
+                  name="consentimento"
+                  required
+                  aria-describedby="consentimento-erro"
+                />
+                <label for="consentimento"
+                  >Entendo que esta é uma demonstração e que nenhum dado será
+                  enviado.</label
+                >
+              </div>
+              <span class="field-error" id="consentimento-erro"></span>
+            </div>
+
+            <!-- role="status" faz leitores de tela anunciarem a mensagem quando ela aparece -->
+            <p class="form-status" id="form-status" role="status" hidden></p>
+
+            <button type="submit" class="button button--primary">
+              Enviar interesse
+            </button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <!-- ====================== RODAPÉ ====================== -->
+    <footer class="site-footer">
+      <div class="container site-footer__inner">
+        <div>
+          <p class="logo">Fit<span>Flow</span></p>
+          <p class="text-muted">
+            Projeto fictício de landing page fitness, criado para estudo de
+            HTML, CSS e JavaScript.
+          </p>
+        </div>
+        <nav aria-label="Rodapé">
+          <ul class="footer-links">
+            <li><a href="#beneficios">Benefícios</a></li>
+            <li><a href="#modalidades">Modalidades</a></li>
+            <li><a href="#como-funciona">Como funciona</a></li>
+            <li><a href="#faq">Perguntas</a></li>
+            <li><a href="#interesse">Contato</a></li>
+          </ul>
+        </nav>
+      </div>
+    </footer>
+
+    <script>
+      /* =====================================================================
+       JAVASCRIPT
+       Cada funcionalidade é uma função com uma única responsabilidade.
+       As funções são chamadas no final do arquivo, depois que o HTML já existe.
+       'use strict' faz o navegador acusar alguns erros comuns de código.
+       ===================================================================== */
+      "use strict";
+
+      /* ---------------------------------------------------------------------
+       1. MENU RESPONSIVO
+       Estratégia: o CSS esconde/mostra o menu conforme a classe .is-open.
+       O JS só troca a classe e mantém os atributos ARIA sincronizados.
+       --------------------------------------------------------------------- */
+      function initMenu() {
+        const toggle = document.querySelector(".nav__toggle");
+        const menu = document.querySelector("#menu-principal");
+        if (!toggle || !menu) return; // proteção: se faltar algo no HTML, não quebra
+
+        // Única função que altera o estado; todas as ações abaixo a reutilizam
+        function setMenuOpen(isOpen) {
+          menu.classList.toggle("is-open", isOpen);
+          toggle.setAttribute("aria-expanded", String(isOpen));
+          toggle.setAttribute(
+            "aria-label",
+            isOpen ? "Fechar menu" : "Abrir menu",
+          );
+        }
+
+        toggle.addEventListener("click", () => {
+          setMenuOpen(toggle.getAttribute("aria-expanded") !== "true");
+        });
+
+        // Fecha ao escolher um link (event delegation: um ouvinte na lista inteira)
+        menu.addEventListener("click", (event) => {
+          if (event.target.closest("a")) setMenuOpen(false);
+        });
+
+        // Fecha com Esc e devolve o foco ao botão
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape" && menu.classList.contains("is-open")) {
+            setMenuOpen(false);
+            toggle.focus();
+          }
+        });
+
+        // Se a tela passar a ser "desktop", reinicia o estado do menu móvel
+        const desktopQuery = window.matchMedia("(min-width: 900px)");
+        desktopQuery.addEventListener("change", (event) => {
+          if (event.matches) setMenuOpen(false);
+        });
+      }
+
+      /* ---------------------------------------------------------------------
+       2. BOTÕES DE EXPANDIR/RECOLHER (cards de modalidades e FAQ)
+       Reutilização: o mesmo código atende os dois componentes, porque ambos
+       seguem o padrão <button aria-controls="id"> + painel com atributo hidden.
+       --------------------------------------------------------------------- */
+      function setExpanded(button, isExpanded) {
+        const panel = document.getElementById(
+          button.getAttribute("aria-controls"),
+        );
+        if (!panel) return;
+
+        button.setAttribute("aria-expanded", String(isExpanded)); // informa o estado
+        panel.hidden = !isExpanded; // mostra/esconde
+
+        // Troca o texto do botão, se ele tiver rótulos definidos em data-*
+        const label = button.querySelector(".toggle__text");
+        if (label && button.dataset.labelExpanded) {
+          label.textContent = isExpanded
+            ? button.dataset.labelExpanded
+            : button.dataset.labelCollapsed;
+        }
+      }
+
+      function initToggles() {
+        const buttons = document.querySelectorAll(".toggle, .faq__question");
+        buttons.forEach((button) => {
+          // O evento "click" do <button> também dispara com Enter e Espaço (teclado) e com toque
+          button.addEventListener("click", () => {
+            const isOpen = button.getAttribute("aria-expanded") === "true";
+            setExpanded(button, !isOpen);
+          });
+        });
+      }
+
+      /* ---------------------------------------------------------------------
+       3. FORMULÁRIO: VALIDAÇÃO E FEEDBACK
+       Cada campo tem uma regra em 'rules'. A regra devolve uma mensagem de erro,
+       ou texto vazio quando o valor é válido.
+       --------------------------------------------------------------------- */
+      const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // algo@algo.algo
+
+      const rules = {
+        nome: (field) =>
+          field.value.trim().length >= 2
+            ? ""
+            : "Informe seu nome (mínimo de 2 caracteres).",
+        email: (field) => {
+          const value = field.value.trim();
+          if (!value) return "Informe seu e-mail.";
+          return EMAIL_PATTERN.test(value)
+            ? ""
+            : "Use um formato válido, como nome@exemplo.com.";
+        },
+        objetivo: (field) =>
+          field.value ? "" : "Escolha um objetivo de treino.",
+        consentimento: (field) =>
+          field.checked ? "" : "Marque a caixa para continuar.",
+      };
+
+      // Mostra ou limpa o erro de UM campo, atualizando também os atributos ARIA
+      function showFieldError(field, message) {
+        const errorBox = document.getElementById(`${field.id}-erro`);
+        errorBox.textContent = message;
+        field.classList.toggle("is-invalid", Boolean(message));
+        if (message) {
+          field.setAttribute("aria-invalid", "true");
+        } else {
+          field.removeAttribute("aria-invalid");
+        }
+      }
+
+      // Valida UM campo e devolve true/false
+      function validateField(field) {
+        const message = rules[field.name](field);
+        showFieldError(field, message);
+        return message === "";
+      }
+
+      // Mostra a mensagem geral (sucesso ou erro) abaixo dos campos
+      function showFormStatus(statusBox, type, text) {
+        statusBox.hidden = false;
+        statusBox.className = `form-status is-${type}`;
+        statusBox.textContent = (type === "success" ? "✔ " : "⚠ ") + text; // ícone + cor
+      }
+
+      function initForm() {
+        const form = document.getElementById("form-interesse");
+        const statusBox = document.getElementById("form-status");
+        if (!form || !statusBox) return;
+
+        // Campos que possuem regra (os que têm o atributo name correspondente)
+        const fields = Array.from(form.elements).filter((el) => rules[el.name]);
+
+        // Valida ao sair do campo; depois de errado, revalida enquanto a pessoa digita
+        fields.forEach((field) => {
+          field.addEventListener("blur", () => validateField(field));
+          const liveEvent =
+            field.type === "checkbox" || field.tagName === "SELECT"
+              ? "change"
+              : "input";
+          field.addEventListener(liveEvent, () => {
+            if (field.classList.contains("is-invalid")) validateField(field);
+          });
+        });
+
+        form.addEventListener("submit", (event) => {
+          event.preventDefault(); // impede o recarregamento da página
+
+          // Valida TODOS os campos (map roda em todos; filter pega os inválidos)
+          const invalidFields = fields.filter((field) => !validateField(field));
+
+          if (invalidFields.length > 0) {
+            showFormStatus(
+              statusBox,
+              "error",
+              "Revise os campos destacados para continuar.",
+            );
+            invalidFields[0].focus(); // leva o foco ao primeiro erro
+            return; // interrompe: nada é processado
+          }
+
+          // Fluxo válido: apenas demonstrativo, sem rede e sem armazenamento
+          showFormStatus(
+            statusBox,
+            "success",
+            "Tudo certo! Esta é uma demonstração: nenhum dado foi enviado ou salvo.",
+          );
+          form.reset();
+          fields.forEach((field) => showFieldError(field, ""));
+        });
+      }
+
+      /* ---------------------------------------------------------------------
+       4. INICIALIZAÇÃO: liga tudo
+       --------------------------------------------------------------------- */
+      initMenu();
+      initToggles();
+      initForm();
+    </script>
+  </body>
+</html>
