@@ -1,1673 +1,1816 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>FitFlow — Consistência no seu treino</title>
-    <meta
-      name="description"
-      content="FitFlow: conheça modalidades de treino, organize sua rotina e mantenha a consistência. Projeto demonstrativo."
-    />
-    <meta name="theme-color" content="#111411" />
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FitFlow: conheça modalidades de treino, organize sua rotina e desenvolva consistência no seu ritmo.">
+  <meta name="theme-color" content="#111411">
+  <title>FitFlow — Consistência que transforma</title>
 
-    <!-- Fonte externa (única dependência). Se falhar, o font-stack do CSS assume. -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+  <!-- Fonte externa opcional. Se não carregar, o navegador usa a pilha sans-serif abaixo. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <style>
-      /* =====================================================================
-       1. VARIÁVEIS GLOBAIS (DESIGN SYSTEM)
-       Todas as decisões visuais ficam aqui. Os componentes usam var(--nome).
-       Mudou o valor aqui? Muda em toda a página, sem mexer em cada componente.
-       ===================================================================== */
-      :root {
-        /* --- Cores --- */
-        --color-bg: #111411; /* fundo da página */
-        --color-surface: #1c211d; /* cards e superfícies */
-        --color-surface-hover: #232a24; /* card em hover */
-        --color-primary: #c6f36b; /* destaque (botões, ícones) */
-        --color-primary-hover: #d7f98f; /* destaque em hover */
-        --color-on-primary: #111411; /* texto sobre o destaque (contraste) */
-        --color-text: #f4f5f0; /* texto principal */
-        --color-text-muted: #a7aea5; /* texto secundário */
-        --color-border: #2e352f; /* bordas sutis */
-        --color-focus: #c6f36b; /* anel de foco do teclado */
-        --color-success: #7ddc8f; /* mensagens de sucesso */
-        --color-error: #ff8f85; /* mensagens de erro */
+  <style>
+    /* =========================================================
+       1. DESIGN SYSTEM
+       Altere estas variáveis para mudar a aparência do site em
+       um único lugar, sem precisar editar cada componente.
+       ========================================================= */
+    :root {
+      /* Cores */
+      --color-bg: #111411;
+      --color-surface: #1C211D;
+      --color-surface-raised: #242B25;
+      --color-primary: #C6F36B;
+      --color-primary-hover: #D5FF83;
+      --color-text: #F4F5F0;
+      --color-text-muted: #A7AEA5;
+      --color-border: rgba(244, 245, 240, 0.12);
+      --color-focus: #E6FFAC;
+      --color-success: #B9F7C5;
+      --color-error: #FFB4A9;
 
-        /* --- Tipografia --- */
-        --font-body:
-          "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial,
-          sans-serif;
-        --font-weight-regular: 400;
-        --font-weight-medium: 500;
-        --font-weight-semibold: 600;
-        --font-weight-bold: 700;
-        --font-weight-extrabold: 800;
-        /* clamp(mínimo, ideal, máximo): o texto cresce com a tela, dentro de limites */
-        --font-size-h1: clamp(2.25rem, 6vw, 4rem);
-        --font-size-h2: clamp(1.75rem, 4vw, 2.5rem);
-        --font-size-h3: 1.25rem;
-        --font-size-body: 1rem;
-        --font-size-small: 0.875rem;
-        --font-size-caption: 0.8125rem;
-        --line-height-tight: 1.15;
-        --line-height-body: 1.6;
+      /* Tipografia */
+      --font-body: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-weight-regular: 400;
+      --font-weight-medium: 500;
+      --font-weight-semibold: 600;
+      --font-weight-bold: 700;
+      --font-weight-extrabold: 800;
+      --font-size-xs: 0.78rem;
+      --font-size-sm: 0.9rem;
+      --font-size-body: 1rem;
+      --font-size-lg: 1.15rem;
+      --font-size-xl: clamp(1.35rem, 2vw, 1.7rem);
+      --font-size-h2: clamp(2rem, 4vw, 3.2rem);
+      --font-size-hero: clamp(2.8rem, 6.7vw, 5.8rem);
+      --line-height-body: 1.65;
+      --line-height-heading: 1.05;
 
-        /* --- Espaçamentos --- */
-        --space-xs: 0.5rem;
-        --space-sm: 0.75rem;
-        --space-md: 1rem;
-        --space-lg: 1.5rem;
-        --space-xl: 2.5rem;
-        --space-section: clamp(
-          4rem,
-          9vw,
-          7rem
-        ); /* respiro vertical entre seções */
-        --space-card: 1.5rem; /* padding interno dos cards */
+      /* Espaçamentos */
+      --space-2xs: 0.35rem;
+      --space-xs: 0.6rem;
+      --space-sm: 0.9rem;
+      --space-md: 1.25rem;
+      --space-lg: 1.75rem;
+      --space-xl: 2.5rem;
+      --space-2xl: 4rem;
+      --space-section: clamp(4.5rem, 9vw, 8rem);
+      --space-card: clamp(1.25rem, 2.5vw, 2rem);
 
-        /* --- Dimensões e efeitos --- */
-        --container-width: 1120px;
-        --radius-sm: 8px;
-        --radius-card: 16px;
-        --radius-pill: 999px;
-        --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.35);
-        --transition: 200ms ease;
-        --header-height: 4.25rem;
-        --control-height: 3rem; /* altura de botões e campos */
+      /* Dimensões e efeitos */
+      --container-width: 1160px;
+      --header-height: 78px;
+      --radius-sm: 0.65rem;
+      --radius-md: 1rem;
+      --radius-card: 1.4rem;
+      --radius-pill: 999px;
+      --shadow-card: 0 20px 60px rgba(0, 0, 0, 0.16);
+      --transition-fast: 160ms ease;
+      --transition-normal: 240ms ease;
+    }
+
+    /* =========================================================
+       2. RESET E ESTILOS GLOBAIS
+       O box-sizing torna mais previsível o cálculo de largura
+       e altura dos elementos.
+       ========================================================= */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: calc(var(--header-height) + 1rem);
+    }
+
+    body {
+      margin: 0;
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      font-size: var(--font-size-body);
+      line-height: var(--line-height-body);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body.menu-open {
+      overflow: hidden;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      color: inherit;
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--color-focus);
+      outline-offset: 4px;
+    }
+
+    ::selection {
+      color: var(--color-bg);
+      background: var(--color-primary);
+    }
+
+    /* =========================================================
+       3. TIPOGRAFIA E CLASSES REUTILIZÁVEIS
+       As classes compartilhadas evitam repetir os mesmos estilos.
+       ========================================================= */
+    h1, h2, h3, p {
+      margin-top: 0;
+    }
+
+    h1, h2, h3 {
+      line-height: var(--line-height-heading);
+      letter-spacing: -0.045em;
+    }
+
+    h1, h2 {
+      font-weight: var(--font-weight-extrabold);
+    }
+
+    h3 {
+      font-weight: var(--font-weight-bold);
+    }
+
+    p {
+      color: var(--color-text-muted);
+    }
+
+    .container {
+      width: min(calc(100% - 2.5rem), var(--container-width));
+      margin-inline: auto;
+    }
+
+    .section {
+      padding-block: var(--space-section);
+    }
+
+    .section-heading {
+      max-width: 680px;
+      margin-bottom: var(--space-2xl);
+    }
+
+    .section-title {
+      margin-bottom: var(--space-md);
+      font-size: var(--font-size-h2);
+    }
+
+    .section-description {
+      max-width: 620px;
+      margin-bottom: 0;
+      font-size: var(--font-size-lg);
+    }
+
+    .text-muted {
+      color: var(--color-text-muted);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      margin-bottom: var(--space-md);
+      color: var(--color-primary);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      width: 1.5rem;
+      height: 1px;
+      background: currentColor;
+      content: "";
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 48px;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-xs);
+      padding: 0.8rem 1.25rem;
+      border: 1px solid transparent;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-bold);
+      text-align: center;
+      transition: background var(--transition-fast), color var(--transition-fast),
+        border-color var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .button--primary {
+      background: var(--color-primary);
+      color: #151A12;
+    }
+
+    .button--primary:hover {
+      background: var(--color-primary-hover);
+    }
+
+    .button--secondary {
+      border-color: var(--color-border);
+      background: transparent;
+      color: var(--color-text);
+    }
+
+    .button--secondary:hover {
+      border-color: var(--color-primary);
+      background: rgba(198, 243, 107, 0.06);
+    }
+
+    .button--small {
+      min-height: 42px;
+      padding: 0.65rem 1rem;
+    }
+
+    .grid {
+      display: grid;
+      gap: var(--space-lg);
+    }
+
+    .card {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      background: var(--color-surface);
+      box-shadow: var(--shadow-card);
+    }
+
+    .icon-box {
+      display: grid;
+      width: 48px;
+      height: 48px;
+      flex: 0 0 auto;
+      place-items: center;
+      border: 1px solid rgba(198, 243, 107, 0.24);
+      border-radius: var(--radius-md);
+      background: rgba(198, 243, 107, 0.08);
+      color: var(--color-primary);
+    }
+
+    .icon-box svg {
+      width: 23px;
+      height: 23px;
+    }
+
+    .skip-link {
+      position: absolute;
+      z-index: 1000;
+      top: 0.75rem;
+      left: 0.75rem;
+      padding: 0.7rem 1rem;
+      transform: translateY(-160%);
+      border-radius: var(--radius-sm);
+      background: var(--color-primary);
+      color: #151A12;
+      font-weight: var(--font-weight-bold);
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    /* =========================================================
+       4. CABEÇALHO E NAVEGAÇÃO
+       O menu mobile é controlado pelo botão e pelo JavaScript.
+       ========================================================= */
+    .site-header {
+      position: sticky;
+      z-index: 100;
+      top: 0;
+      border-bottom: 1px solid var(--color-border);
+      background: rgba(17, 20, 17, 0.9);
+      backdrop-filter: blur(18px);
+    }
+
+    .header-inner {
+      display: flex;
+      min-height: var(--header-height);
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-lg);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 1.25rem;
+      font-weight: var(--font-weight-extrabold);
+      letter-spacing: -0.06em;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 31px;
+      height: 31px;
+      place-items: center;
+      border-radius: 9px;
+      background: var(--color-primary);
+      color: #151A12;
+      font-size: 1rem;
+      letter-spacing: -0.08em;
+    }
+
+    .brand span:last-child span {
+      color: var(--color-primary);
+    }
+
+    .site-nav {
+      display: flex;
+      align-items: center;
+      gap: clamp(1rem, 2.5vw, 2rem);
+    }
+
+    .nav-link {
+      color: var(--color-text-muted);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      transition: color var(--transition-fast);
+    }
+
+    .nav-link:hover,
+    .nav-link:focus-visible {
+      color: var(--color-text);
+    }
+
+    .menu-toggle {
+      display: none;
+      width: 44px;
+      height: 44px;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--color-border);
+      border-radius: 50%;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .menu-toggle svg {
+      width: 21px;
+      height: 21px;
+    }
+
+    /* =========================================================
+       5. HERO
+       Grid cria duas colunas no desktop e uma no celular.
+       A imagem é externa; se a conexão falhar, o fundo continua.
+       ========================================================= */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding-block: clamp(4.5rem, 9vw, 7.5rem) var(--space-section);
+    }
+
+    .hero::before {
+      position: absolute;
+      z-index: -1;
+      top: -12rem;
+      right: -14rem;
+      width: 40rem;
+      height: 40rem;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(198, 243, 107, 0.1), transparent 68%);
+      content: "";
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+      align-items: center;
+      gap: clamp(2.5rem, 6vw, 5.5rem);
+    }
+
+    .hero-copy {
+      max-width: 650px;
+    }
+
+    .hero h1 {
+      max-width: 720px;
+      margin-bottom: var(--space-lg);
+      font-size: var(--font-size-hero);
+      letter-spacing: -0.075em;
+    }
+
+    .hero h1 span {
+      color: var(--color-primary);
+    }
+
+    .hero-copy > p {
+      max-width: 540px;
+      margin-bottom: var(--space-xl);
+      font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-xl);
+    }
+
+    .hero-note {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      color: var(--color-text-muted);
+      font-size: var(--font-size-sm);
+    }
+
+    .hero-note-mark {
+      display: grid;
+      width: 25px;
+      height: 25px;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(198, 243, 107, 0.12);
+      color: var(--color-primary);
+      font-weight: var(--font-weight-bold);
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: 480px;
+    }
+
+    .hero-image-wrap {
+      position: absolute;
+      inset: 0 0 0 7%;
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+      border-radius: 48% 48% var(--radius-card) var(--radius-card);
+      background: linear-gradient(145deg, #394638, #202820 55%, #151915);
+    }
+
+    .hero-image-wrap::after {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 45%, rgba(17, 20, 17, 0.78));
+      content: "";
+    }
+
+    .hero-image {
+      width: 100%;
+      height: 100%;
+      min-height: 480px;
+      object-fit: cover;
+      object-position: center;
+      opacity: 0.86;
+    }
+
+    .hero-image-label {
+      position: absolute;
+      z-index: 1;
+      right: 1.5rem;
+      bottom: 1.5rem;
+      left: 1.5rem;
+    }
+
+    .hero-image-label strong {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-size: var(--font-size-xl);
+    }
+
+    .hero-image-label span {
+      color: #D8DED3;
+      font-size: var(--font-size-sm);
+    }
+
+    .floating-tag {
+      position: absolute;
+      z-index: 2;
+      top: 16%;
+      left: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background: var(--color-surface-raised);
+      box-shadow: var(--shadow-card);
+    }
+
+    .floating-tag .icon-box {
+      width: 39px;
+      height: 39px;
+      border-radius: 0.75rem;
+    }
+
+    .floating-tag strong,
+    .floating-tag small {
+      display: block;
+    }
+
+    .floating-tag strong {
+      font-size: var(--font-size-sm);
+    }
+
+    .floating-tag small {
+      color: var(--color-text-muted);
+      font-size: var(--font-size-xs);
+    }
+
+    /* =========================================================
+       6. BENEFÍCIOS
+       Os quatro itens compartilham a mesma classe de card.
+       ========================================================= */
+    .benefits-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .benefit-card {
+      padding: var(--space-card);
+      box-shadow: none;
+      transition: border-color var(--transition-normal), transform var(--transition-normal);
+    }
+
+    .benefit-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(198, 243, 107, 0.38);
+    }
+
+    .benefit-card .icon-box {
+      margin-bottom: var(--space-xl);
+    }
+
+    .benefit-card h3 {
+      margin-bottom: var(--space-xs);
+      font-size: 1.08rem;
+      letter-spacing: -0.025em;
+    }
+
+    .benefit-card p {
+      margin-bottom: 0;
+      font-size: var(--font-size-sm);
+    }
+
+    /* =========================================================
+       7. MODALIDADES DE TREINO
+       Cada botão expande os detalhes da modalidade associada.
+       ========================================================= */
+    .modalities {
+      background: #151915;
+    }
+
+    .modalities-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .modality-card {
+      overflow: hidden;
+      box-shadow: none;
+      transition: border-color var(--transition-normal), transform var(--transition-normal);
+    }
+
+    .modality-card:hover,
+    .modality-card.is-expanded {
+      transform: translateY(-3px);
+      border-color: rgba(198, 243, 107, 0.45);
+    }
+
+    .modality-art {
+      position: relative;
+      display: flex;
+      min-height: 170px;
+      align-items: flex-end;
+      overflow: hidden;
+      padding: var(--space-lg);
+      background:
+        radial-gradient(circle at 78% 18%, rgba(198, 243, 107, 0.2), transparent 28%),
+        linear-gradient(140deg, #343D32, #1B211C 70%);
+    }
+
+    .modality-art::after {
+      position: absolute;
+      right: -1.5rem;
+      bottom: -4rem;
+      width: 12rem;
+      height: 12rem;
+      border: 1px solid rgba(198, 243, 107, 0.18);
+      border-radius: 50%;
+      box-shadow: 0 0 0 24px rgba(198, 243, 107, 0.035), 0 0 0 48px rgba(198, 243, 107, 0.025);
+      content: "";
+    }
+
+    .modality-number {
+      position: relative;
+      z-index: 1;
+      color: var(--color-primary);
+      font-size: 3.5rem;
+      font-weight: var(--font-weight-extrabold);
+      letter-spacing: -0.09em;
+      line-height: 1;
+    }
+
+    .modality-content {
+      padding: var(--space-card);
+    }
+
+    .modality-content h3 {
+      margin-bottom: var(--space-sm);
+      font-size: 1.35rem;
+    }
+
+    .modality-content > p {
+      min-height: 3.2em;
+      margin-bottom: var(--space-lg);
+      font-size: var(--font-size-sm);
+    }
+
+    .modality-details {
+      margin: 0 0 var(--space-md);
+      padding: var(--space-md);
+      border-radius: var(--radius-sm);
+      background: rgba(198, 243, 107, 0.06);
+      color: var(--color-text-muted);
+      font-size: var(--font-size-sm);
+    }
+
+    .modality-details[hidden] {
+      display: none;
+    }
+
+    .modality-details ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+
+    .modality-details li + li {
+      margin-top: 0.35rem;
+    }
+
+    .modality-toggle {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-sm);
+      padding: 0.8rem 0;
+      border: 0;
+      border-top: 1px solid var(--color-border);
+      background: transparent;
+      color: var(--color-primary);
+      cursor: pointer;
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-bold);
+      text-align: left;
+    }
+
+    .modality-toggle svg {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+      transition: transform var(--transition-fast);
+    }
+
+    .modality-toggle[aria-expanded="true"] svg {
+      transform: rotate(180deg);
+    }
+
+    /* =========================================================
+       8. COMO FUNCIONA
+       Grid mantém as três etapas alinhadas em telas amplas.
+       ========================================================= */
+    .steps-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .step-card {
+      padding: var(--space-card) 0 0;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .step-number {
+      display: inline-block;
+      margin-bottom: var(--space-xl);
+      color: var(--color-primary);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-bold);
+      letter-spacing: 0.12em;
+    }
+
+    .step-card h3 {
+      margin-bottom: var(--space-sm);
+      font-size: 1.35rem;
+    }
+
+    .step-card p {
+      max-width: 330px;
+      margin-bottom: 0;
+    }
+
+    /* =========================================================
+       9. CHAMADA PARA AÇÃO
+       A âncora leva diretamente ao formulário demonstrativo.
+       ========================================================= */
+    .cta-panel {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-xl);
+      padding: clamp(2rem, 5vw, 4rem);
+      border-radius: var(--radius-card);
+      background: var(--color-primary);
+      color: #151A12;
+    }
+
+    .cta-panel::after {
+      position: absolute;
+      top: -6rem;
+      right: 13%;
+      width: 18rem;
+      height: 18rem;
+      border: 1px solid rgba(21, 26, 18, 0.14);
+      border-radius: 50%;
+      box-shadow: 0 0 0 28px rgba(21, 26, 18, 0.035), 0 0 0 56px rgba(21, 26, 18, 0.025);
+      content: "";
+      pointer-events: none;
+    }
+
+    .cta-copy {
+      position: relative;
+      z-index: 1;
+      max-width: 670px;
+    }
+
+    .cta-copy .eyebrow {
+      color: #33451F;
+    }
+
+    .cta-copy h2 {
+      margin-bottom: var(--space-sm);
+      font-size: clamp(2rem, 4vw, 3.4rem);
+    }
+
+    .cta-copy p {
+      max-width: 560px;
+      margin-bottom: 0;
+      color: #35402D;
+    }
+
+    .cta-panel .button {
+      position: relative;
+      z-index: 1;
+      flex: 0 0 auto;
+      background: #151A12;
+      color: var(--color-text);
+    }
+
+    .cta-panel .button:hover {
+      background: #293126;
+    }
+
+    /* =========================================================
+       10. FAQ
+       O atributo hidden controla a exibição; aria-expanded informa
+       o estado do botão às tecnologias assistivas.
+       ========================================================= */
+    .faq-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+      gap: clamp(2rem, 7vw, 6rem);
+    }
+
+    .faq-intro p {
+      max-width: 370px;
+    }
+
+    .faq-list {
+      border-top: 1px solid var(--color-border);
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .faq-question {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-lg);
+      padding: 1.3rem 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      font-size: var(--font-size-body);
+      font-weight: var(--font-weight-semibold);
+      text-align: left;
+    }
+
+    .faq-question svg {
+      width: 20px;
+      height: 20px;
+      flex: 0 0 auto;
+      color: var(--color-primary);
+      transition: transform var(--transition-fast);
+    }
+
+    .faq-question[aria-expanded="true"] svg {
+      transform: rotate(45deg);
+    }
+
+    .faq-answer {
+      padding: 0 2rem 1.25rem 0;
+    }
+
+    .faq-answer p {
+      margin-bottom: 0;
+      font-size: var(--font-size-sm);
+    }
+
+    .faq-answer[hidden] {
+      display: none;
+    }
+
+    /* =========================================================
+       11. FORMULÁRIO
+       Os estados de erro são descritos em texto, não só por cor.
+       ========================================================= */
+    .form-section {
+      background: #151915;
+    }
+
+    .form-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      align-items: start;
+      gap: clamp(2rem, 7vw, 6rem);
+    }
+
+    .form-intro p {
+      max-width: 430px;
+    }
+
+    .form-card {
+      padding: clamp(1.25rem, 3vw, 2.25rem);
+      box-shadow: none;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-md);
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      min-width: 0;
+    }
+
+    .form-field--full {
+      grid-column: 1 / -1;
+    }
+
+    .form-field label {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .form-field input,
+    .form-field select {
+      width: 100%;
+      min-height: 48px;
+      padding: 0.75rem 0.85rem;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      background: #141814;
+      color: var(--color-text);
+    }
+
+    .form-field input::placeholder {
+      color: #7F897D;
+    }
+
+    .form-field input[aria-invalid="true"],
+    .form-field select[aria-invalid="true"] {
+      border-color: var(--color-error);
+    }
+
+    .field-error {
+      min-height: 1.1em;
+      color: var(--color-error);
+      font-size: var(--font-size-xs);
+    }
+
+    .consent-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+      color: var(--color-text-muted);
+      font-size: var(--font-size-sm);
+    }
+
+    .consent-row input {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+      margin-top: 0.2rem;
+      accent-color: var(--color-primary);
+    }
+
+    .form-submit {
+      width: 100%;
+      margin-top: var(--space-md);
+    }
+
+    .form-note {
+      margin: var(--space-md) 0 0;
+      font-size: var(--font-size-xs);
+    }
+
+    .form-status {
+      margin-top: var(--space-md);
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-sm);
+    }
+
+    .form-status:empty {
+      display: none;
+    }
+
+    .form-status.is-success {
+      border-color: rgba(185, 247, 197, 0.4);
+      color: var(--color-success);
+    }
+
+    .form-status.is-error {
+      border-color: rgba(255, 180, 169, 0.4);
+      color: var(--color-error);
+    }
+
+    /* =========================================================
+       12. RODAPÉ
+       Links internos conduzem a seções existentes na página.
+       ========================================================= */
+    .site-footer {
+      padding-block: 2.5rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-xl);
+    }
+
+    .footer-brand p {
+      max-width: 330px;
+      margin: 0.65rem 0 0;
+      font-size: var(--font-size-sm);
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-lg);
+    }
+
+    .footer-links a {
+      color: var(--color-text-muted);
+      font-size: var(--font-size-sm);
+    }
+
+    .footer-links a:hover {
+      color: var(--color-primary);
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-md);
+      margin-top: var(--space-xl);
+      padding-top: var(--space-lg);
+      border-top: 1px solid var(--color-border);
+      color: var(--color-text-muted);
+      font-size: var(--font-size-xs);
+    }
+
+    /* =========================================================
+       13. RESPONSIVIDADE
+       Os breakpoints reorganizam o conteúdo conforme a largura.
+       ========================================================= */
+    @media (max-width: 980px) {
+      .benefits-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      /* =====================================================================
-       2. RESET E ESTILOS GLOBAIS
-       ===================================================================== */
+      .hero-grid {
+        gap: var(--space-xl);
+      }
+
+      .hero-visual,
+      .hero-image,
+      .hero-image-wrap {
+        min-height: 420px;
+      }
+
+      .modalities-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .modality-card:last-child {
+        grid-column: 1 / -1;
+      }
+
+      .modality-card:last-child .modality-art {
+        min-height: 140px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      :root {
+        --header-height: 70px;
+      }
+
+      .container {
+        width: min(calc(100% - 2rem), var(--container-width));
+      }
+
+      .menu-toggle {
+        display: inline-flex;
+      }
+
+      .header-cta {
+        display: none;
+      }
+
+      .site-nav {
+        position: fixed;
+        top: var(--header-height);
+        right: 0;
+        left: 0;
+        display: none;
+        align-items: stretch;
+        flex-direction: column;
+        gap: 0;
+        padding: 0.5rem 1.25rem 1.25rem;
+        border-bottom: 1px solid var(--color-border);
+        background: var(--color-bg);
+      }
+
+      .site-nav.is-open {
+        display: flex;
+      }
+
+      .site-nav .nav-link {
+        padding: 0.95rem 0;
+        border-bottom: 1px solid var(--color-border);
+        font-size: 1rem;
+      }
+
+      .site-nav .nav-link:last-child {
+        border-bottom: 0;
+      }
+
+      .hero-grid,
+      .faq-layout,
+      .form-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 4rem;
+      }
+
+      .hero-copy {
+        max-width: 680px;
+      }
+
+      .hero-visual {
+        min-height: 420px;
+        margin-top: 0.5rem;
+      }
+
+      .hero-image-wrap {
+        left: 5%;
+      }
+
+      .floating-tag {
+        left: 0;
+      }
+
+      .steps-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-xl);
+      }
+
+      .step-card {
+        display: grid;
+        grid-template-columns: 3rem 1fr;
+        column-gap: var(--space-md);
+      }
+
+      .step-number {
+        grid-row: span 2;
+        margin-bottom: 0;
+      }
+
+      .step-card h3 {
+        margin-bottom: var(--space-xs);
+      }
+
+      .step-card p {
+        grid-column: 2;
+      }
+
+      .cta-panel {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .faq-layout,
+      .form-layout {
+        gap: var(--space-xl);
+      }
+
+      .footer-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .hero h1 {
+        font-size: clamp(2.6rem, 14vw, 4rem);
+      }
+
+      .hero-actions {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .hero-actions .button {
+        width: 100%;
+      }
+
+      .hero-visual,
+      .hero-image,
+      .hero-image-wrap {
+        min-height: 340px;
+      }
+
+      .floating-tag {
+        top: 9%;
+        padding: 0.65rem 0.75rem;
+      }
+
+      .benefits-grid,
+      .modalities-grid,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .modality-card:last-child {
+        grid-column: auto;
+      }
+
+      .modality-content > p {
+        min-height: 0;
+      }
+
+      .form-field--full {
+        grid-column: auto;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        gap: 0.35rem;
+      }
+    }
+
+    /* Acessibilidade: desativa movimentos não essenciais para quem
+       configurou redução de movimento no sistema operacional. */
+    @media (prefers-reduced-motion: reduce) {
       *,
       *::before,
       *::after {
-        box-sizing: border-box;
-      } /* padding não aumenta a largura */
-      * {
-        margin: 0;
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
       }
-      ul,
-      ol {
-        padding: 0;
-        list-style: none;
-      }
-      img,
-      svg {
-        display: block;
-        max-width: 100%;
-      } /* imagens fluidas */
-      button,
-      input,
-      select {
-        font: inherit;
-        color: inherit;
-      }
-      button {
-        cursor: pointer;
-      }
+    }
+  </style>
+</head>
 
-      html {
-        scroll-behavior: smooth;
-      }
-      body {
-        background: var(--color-bg);
-        color: var(--color-text);
-        font-family: var(--font-body);
-        font-size: var(--font-size-body);
-        font-weight: var(--font-weight-regular);
-        line-height: var(--line-height-body);
-        -webkit-font-smoothing: antialiased;
-      }
-      /* Evita que o cabeçalho fixo cubra o título quando clicamos num link âncora */
-      section[id] {
-        scroll-margin-top: var(--header-height);
-      }
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
 
-      /* =====================================================================
-       3. TIPOGRAFIA E ELEMENTOS BÁSICOS
-       ===================================================================== */
-      h1,
-      h2,
-      h3 {
-        line-height: var(--line-height-tight);
-        letter-spacing: -0.02em;
-      }
-      h1 {
-        font-size: var(--font-size-h1);
-        font-weight: var(--font-weight-extrabold);
-      }
-      h2 {
-        font-size: var(--font-size-h2);
-        font-weight: var(--font-weight-bold);
-      }
-      h3 {
-        font-size: var(--font-size-h3);
-        font-weight: var(--font-weight-semibold);
-      }
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
+  <!-- Cabeçalho fixo com navegação por âncoras da própria página. -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#inicio" aria-label="FitFlow — início">
+        <span class="brand-mark" aria-hidden="true">F</span>
+        <span>Fit<span>Flow</span></span>
+      </a>
 
-      /* =====================================================================
-       4. UTILITÁRIOS E COMPONENTES REUTILIZÁVEIS
-       ===================================================================== */
-      /* Centraliza o conteúdo com largura máxima e margem lateral */
-      .container {
-        width: min(100% - 2 * var(--space-lg), var(--container-width));
-        margin-inline: auto;
-      }
+      <nav class="site-nav" id="site-nav" aria-label="Navegação principal">
+        <a class="nav-link" href="#beneficios">Benefícios</a>
+        <a class="nav-link" href="#modalidades">Modalidades</a>
+        <a class="nav-link" href="#como-funciona">Como funciona</a>
+        <a class="nav-link" href="#faq">Dúvidas</a>
+      </nav>
 
-      /* Toda seção usa o mesmo espaçamento vertical */
-      .section {
-        padding-block: var(--space-section);
-      }
-      .section--alt {
-        background: var(--color-surface);
-      }
+      <a class="button button--primary button--small header-cta" href="#interesse">Conhecer o FitFlow <span aria-hidden="true">↗</span></a>
 
-      .section-header {
-        max-width: 40rem;
-        margin-bottom: var(--space-xl);
-      }
-      .section-title {
-        margin-bottom: var(--space-sm);
-      }
-      .section-description {
-        color: var(--color-text-muted);
-      }
-      .text-muted {
-        color: var(--color-text-muted);
-      }
+      <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-controls="site-nav" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
 
-      .eyebrow {
-        /* pequeno rótulo acima dos títulos */
-        display: inline-block;
-        margin-bottom: var(--space-sm);
-        color: var(--color-primary);
-        font-size: var(--font-size-caption);
-        font-weight: var(--font-weight-semibold);
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
+  <main id="conteudo">
+    <!-- Hero: apresenta a proposta e as duas principais ações. -->
+    <section class="hero" id="inicio" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">Movimente-se no seu ritmo</span>
+          <h1 id="hero-title">Seu próximo nível começa com <span>consistência.</span></h1>
+          <p>Encontre modalidades, organize seus treinos e construa uma rotina que combine com a sua vida — um passo de cada vez.</p>
+          <div class="hero-actions">
+            <a class="button button--primary" href="#interesse">Quero conhecer <span aria-hidden="true">↗</span></a>
+            <a class="button button--secondary" href="#modalidades">Explorar modalidades</a>
+          </div>
+          <div class="hero-note">
+            <span class="hero-note-mark" aria-hidden="true">✓</span>
+            <span>Uma rotina mais simples começa com um plano possível.</span>
+          </div>
+        </div>
 
-      /* CSS Grid: 1 coluna no celular; as media queries aumentam as colunas */
-      .grid {
-        display: grid;
-        gap: var(--space-lg);
-      }
-
-      /* Botões: base + modificadores (--primary, --secondary) */
-      .button {
-        display: inline-flex; /* Flexbox centraliza o texto */
-        align-items: center;
-        justify-content: center;
-        gap: var(--space-xs);
-        min-height: var(--control-height);
-        padding: 0 var(--space-lg);
-        border: 1px solid transparent;
-        border-radius: var(--radius-pill);
-        font-size: var(--font-size-body);
-        font-weight: var(--font-weight-semibold);
-        transition:
-          background var(--transition),
-          border-color var(--transition),
-          transform var(--transition);
-      }
-      .button:active {
-        transform: translateY(1px);
-      }
-      .button--primary {
-        background: var(--color-primary);
-        color: var(--color-on-primary);
-      }
-      .button--primary:hover {
-        background: var(--color-primary-hover);
-      }
-      .button--secondary {
-        border-color: var(--color-border);
-        color: var(--color-text);
-      }
-      .button--secondary:hover {
-        border-color: var(--color-primary);
-        color: var(--color-primary);
-      }
-      .button--small {
-        min-height: 2.5rem;
-        padding: 0 var(--space-md);
-        font-size: var(--font-size-small);
-      }
-
-      /* Card: base compartilhada por benefícios, modalidades e etapas */
-      .card {
-        background: var(--color-surface);
-        border: 1px solid var(--color-border);
-        border-radius: var(--radius-card);
-        padding: var(--space-card);
-        transition:
-          background var(--transition),
-          border-color var(--transition);
-      }
-      .section--alt .card {
-        background: var(--color-bg);
-      } /* contraste em fundo alternativo */
-      .card:hover {
-        border-color: var(--color-primary);
-      }
-
-      /* Caixa que guarda um ícone SVG */
-      .icon-box {
-        display: grid;
-        place-items: center;
-        width: 3rem;
-        height: 3rem;
-        margin-bottom: var(--space-md);
-        border-radius: var(--radius-sm);
-        background: rgba(198, 243, 107, 0.12);
-        color: var(--color-primary);
-      }
-      .icon-box svg {
-        width: 1.5rem;
-        height: 1.5rem;
-      }
-
-      /* Texto só para leitores de tela */
-      .visually-hidden {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-        clip: rect(0 0 0 0);
-        white-space: nowrap;
-      }
-
-      /* =====================================================================
-       5. CABEÇALHO E NAVEGAÇÃO (mobile-first)
-       ===================================================================== */
-      .site-header {
-        position: sticky;
-        top: 0;
-        z-index: 10;
-        background: rgba(17, 20, 17, 0.92);
-        backdrop-filter: blur(8px);
-        border-bottom: 1px solid var(--color-border);
-      }
-      .site-header__inner {
-        /* Flexbox: logo à esquerda, ações à direita */
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        min-height: var(--header-height);
-        gap: var(--space-md);
-      }
-      .logo {
-        font-size: 1.375rem;
-        font-weight: var(--font-weight-extrabold);
-        letter-spacing: -0.03em;
-      }
-      .logo span {
-        color: var(--color-primary);
-      }
-
-      .nav__toggle {
-        /* botão "hambúrguer" (só no mobile) */
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 2.75rem;
-        height: 2.75rem;
-        background: transparent;
-        border: 1px solid var(--color-border);
-        border-radius: var(--radius-sm);
-      }
-      .nav__toggle svg {
-        width: 1.375rem;
-        height: 1.375rem;
-      }
-
-      /* No mobile a lista fica escondida e aparece quando JS adiciona .is-open */
-      .nav__list {
-        display: none;
-        position: absolute;
-        top: var(--header-height);
-        left: 0;
-        right: 0;
-        flex-direction: column;
-        padding: var(--space-md) var(--space-lg) var(--space-lg);
-        background: var(--color-bg);
-        border-bottom: 1px solid var(--color-border);
-      }
-      .nav__list.is-open {
-        display: flex;
-      }
-      .nav__link {
-        display: block;
-        padding: var(--space-sm) 0;
-        color: var(--color-text-muted);
-        font-weight: var(--font-weight-medium);
-        transition: color var(--transition);
-      }
-      .nav__link:hover {
-        color: var(--color-primary);
-      }
-      .header-cta {
-        display: none;
-      } /* o CTA do cabeçalho aparece só em telas maiores */
-
-      /* =====================================================================
-       6. SEÇÕES
-       ===================================================================== */
-      /* --- Hero --- */
-      .hero {
-        padding-block: var(--space-xl) var(--space-section);
-      }
-      .hero__inner {
-        display: grid;
-        gap: var(--space-xl);
-        align-items: center;
-      }
-      .hero__title span {
-        color: var(--color-primary);
-      }
-      .hero__subtitle {
-        margin-block: var(--space-lg);
-        max-width: 34rem;
-        font-size: 1.125rem;
-      }
-      .hero__actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--space-md);
-      }
-      .hero__visual {
-        background: var(--color-surface);
-        border: 1px solid var(--color-border);
-        border-radius: var(--radius-card);
-        box-shadow: var(--shadow-card);
-        padding: var(--space-md);
-      }
-      .hero__visual svg {
-        width: 100%;
-        height: auto;
-      }
-      .hero__caption {
-        margin-top: var(--space-sm);
-        font-size: var(--font-size-caption);
-      }
-
-      /* --- Benefícios --- */
-      .benefit h3 {
-        margin-bottom: var(--space-xs);
-      }
-      .benefit p {
-        color: var(--color-text-muted);
-        font-size: var(--font-size-small);
-      }
-
-      /* --- Modalidades (cards interativos) --- */
-      .modality__visual {
-        display: grid;
-        place-items: center;
-        height: 7rem;
-        margin-bottom: var(--space-md);
-        border-radius: var(--radius-sm);
-        background: var(--color-bg);
-        color: var(--color-primary);
-      }
-      .modality__visual svg {
-        width: 3.5rem;
-        height: 3.5rem;
-      }
-      .modality h3 {
-        margin-bottom: var(--space-xs);
-      }
-      .modality__summary {
-        color: var(--color-text-muted);
-        margin-bottom: var(--space-md);
-      }
-      .modality__details {
-        margin-bottom: var(--space-md);
-        padding: var(--space-md);
-        border-left: 3px solid var(--color-primary);
-        background: rgba(198, 243, 107, 0.06);
-        border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-        font-size: var(--font-size-small);
-        animation: fade-in var(--transition);
-      }
-      .modality__details li + li {
-        margin-top: var(--space-xs);
-      }
-
-      /* Botão que abre/fecha (usado nos cards e no FAQ). O ícone gira conforme aria-expanded */
-      .toggle {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--space-xs);
-        background: none;
-        border: 0;
-        padding: 0;
-        color: var(--color-primary);
-        font-weight: var(--font-weight-semibold);
-      }
-      .toggle__icon {
-        width: 1.125rem;
-        height: 1.125rem;
-        transition: transform var(--transition);
-      }
-      .toggle[aria-expanded="true"] .toggle__icon {
-        transform: rotate(180deg);
-      }
-
-      /* --- Como funciona --- */
-      .steps {
-        counter-reset: step;
-      } /* contador CSS numera automaticamente */
-      .step {
-        counter-increment: step;
-      }
-      .step::before {
-        content: counter(step);
-        display: grid;
-        place-items: center;
-        width: 2.5rem;
-        height: 2.5rem;
-        margin-bottom: var(--space-md);
-        border-radius: 50%;
-        background: var(--color-primary);
-        color: var(--color-on-primary);
-        font-weight: var(--font-weight-extrabold);
-      }
-      .step h3 {
-        margin-bottom: var(--space-xs);
-      }
-      .step p {
-        color: var(--color-text-muted);
-        font-size: var(--font-size-small);
-      }
-
-      /* --- Chamada para ação --- */
-      .cta-box {
-        padding: var(--space-xl) var(--space-lg);
-        text-align: center;
-        background: var(--color-primary);
-        color: var(--color-on-primary);
-        border-radius: var(--radius-card);
-      }
-      .cta-box p {
-        max-width: 34rem;
-        margin: var(--space-sm) auto var(--space-lg);
-      }
-      .cta-box .button {
-        background: var(--color-bg);
-        color: var(--color-text);
-      }
-      .cta-box .button:hover {
-        background: var(--color-surface);
-      }
-
-      /* --- FAQ --- */
-      .faq {
-        max-width: 46rem;
-        display: grid;
-        gap: var(--space-sm);
-      }
-      .faq__item {
-        padding: 0;
-      }
-      .faq__question {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: var(--space-md);
-        padding: var(--space-md) var(--space-card);
-        background: none;
-        border: 0;
-        text-align: left;
-        font-weight: var(--font-weight-semibold);
-      }
-      .faq__question .toggle__icon {
-        flex-shrink: 0;
-        color: var(--color-primary);
-      }
-      .faq__question[aria-expanded="true"] .toggle__icon {
-        transform: rotate(180deg);
-      }
-      .faq__answer {
-        padding: 0 var(--space-card) var(--space-md);
-        color: var(--color-text-muted);
-        animation: fade-in var(--transition);
-      }
-
-      /* =====================================================================
-       7. FORMULÁRIO E MENSAGENS DE VALIDAÇÃO
-       ===================================================================== */
-      .form {
-        display: grid;
-        gap: var(--space-lg);
-        max-width: 34rem;
-      }
-      .form-field {
-        display: grid;
-        gap: var(--space-xs);
-      }
-      .form-field label {
-        font-weight: var(--font-weight-medium);
-      }
-      .form-control {
-        width: 100%;
-        min-height: var(--control-height);
-        padding: 0 var(--space-md);
-        background: var(--color-bg);
-        border: 1px solid var(--color-border);
-        border-radius: var(--radius-sm);
-        transition: border-color var(--transition);
-      }
-      .form-control:hover {
-        border-color: var(--color-text-muted);
-      }
-      .form-control.is-invalid {
-        border-color: var(--color-error);
-      }
-      .form-check {
-        display: flex;
-        gap: var(--space-sm);
-        align-items: flex-start;
-      }
-      .form-check input {
-        width: 1.25rem;
-        height: 1.25rem;
-        margin-top: 0.2rem;
-        accent-color: var(--color-primary);
-        flex-shrink: 0;
-      }
-      .field-error {
-        min-height: 1.25rem;
-        color: var(--color-error);
-        font-size: var(--font-size-small);
-      }
-      /* O erro usa ícone + texto (não depende só da cor) */
-      .field-error:not(:empty)::before {
-        content: "⚠ ";
-      }
-      .form-status {
-        padding: var(--space-md);
-        border: 1px solid;
-        border-radius: var(--radius-sm);
-        font-weight: var(--font-weight-medium);
-      }
-      .form-status.is-success {
-        color: var(--color-success);
-        border-color: var(--color-success);
-      }
-      .form-status.is-error {
-        color: var(--color-error);
-        border-color: var(--color-error);
-      }
-      .form-note {
-        font-size: var(--font-size-caption);
-      }
-
-      /* =====================================================================
-       8. RODAPÉ
-       ===================================================================== */
-      .site-footer {
-        padding-block: var(--space-xl);
-        border-top: 1px solid var(--color-border);
-      }
-      .site-footer__inner {
-        display: grid;
-        gap: var(--space-lg);
-      }
-      .footer-links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--space-md) var(--space-lg);
-      }
-      .footer-links a {
-        color: var(--color-text-muted);
-        transition: color var(--transition);
-      }
-      .footer-links a:hover {
-        color: var(--color-primary);
-      }
-
-      /* =====================================================================
-       9. MEDIA QUERIES (mobile-first: o base vale para celular,
-          e min-width adiciona regras conforme a tela cresce)
-       ===================================================================== */
-      @media (min-width: 640px) {
-        .grid--2,
-        .grid--4 {
-          grid-template-columns: repeat(2, 1fr);
-        }
-        .grid--3 {
-          grid-template-columns: repeat(2, 1fr);
-        }
-        .cta-box {
-          padding: var(--space-xl) calc(var(--space-xl) * 2);
-        }
-      }
-
-      @media (min-width: 900px) {
-        /* Menu vira horizontal: esconde o hambúrguer e mostra a lista em linha */
-        .nav__toggle {
-          display: none;
-        }
-        .nav__list {
-          display: flex;
-          position: static;
-          flex-direction: row;
-          gap: var(--space-lg);
-          padding: 0;
-          background: none;
-          border: 0;
-        }
-        .nav__link {
-          padding: 0;
-        }
-        .header-cta {
-          display: inline-flex;
-        }
-
-        .hero__inner {
-          grid-template-columns: 1.1fr 0.9fr;
-        } /* texto + imagem lado a lado */
-        .grid--3 {
-          grid-template-columns: repeat(3, 1fr);
-        }
-        .grid--4 {
-          grid-template-columns: repeat(4, 1fr);
-        }
-        .site-footer__inner {
-          grid-template-columns: 1.5fr 1fr;
-          align-items: start;
-        }
-      }
-
-      /* =====================================================================
-       10. ACESSIBILIDADE E MOVIMENTO REDUZIDO
-       ===================================================================== */
-      /* :focus-visible mostra o anel apenas na navegação por teclado */
-      :focus-visible {
-        outline: 3px solid var(--color-focus);
-        outline-offset: 3px;
-      }
-      .button--primary:focus-visible,
-      .cta-box .button:focus-visible {
-        outline-color: var(--color-text);
-      }
-
-      @keyframes fade-in {
-        from {
-          opacity: 0;
-          transform: translateY(-4px);
-        }
-        to {
-          opacity: 1;
-          transform: none;
-        }
-      }
-
-      /* Quem pede menos movimento no sistema operacional não vê animações */
-      @media (prefers-reduced-motion: reduce) {
-        *,
-        *::before,
-        *::after {
-          animation: none !important;
-          transition: none !important;
-        }
-        html {
-          scroll-behavior: auto;
-        }
-      }
-    </style>
-  </head>
-
-  <body>
-    <!-- ====================== CABEÇALHO ====================== -->
-    <header class="site-header">
-      <div class="container site-header__inner">
-        <a href="#inicio" class="logo" aria-label="FitFlow, ir para o início"
-          >Fit<span>Flow</span></a
-        >
-
-        <!-- aria-label diferencia esta <nav> de outras navegações da página -->
-        <nav aria-label="Principal">
-          <!-- aria-expanded e aria-controls informam ao leitor de tela o estado do menu -->
-          <button
-            class="nav__toggle"
-            type="button"
-            aria-expanded="false"
-            aria-controls="menu-principal"
-            aria-label="Abrir menu"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              aria-hidden="true"
+        <div class="hero-visual" aria-label="Pessoa treinando em uma academia">
+          <div class="hero-image-wrap">
+            <img
+              class="hero-image"
+              src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1100&q=85"
+              alt="Academia com equipamentos de musculação"
+              fetchpriority="high"
             >
-              <path d="M4 7h16M4 12h16M4 17h16" />
-            </svg>
-          </button>
-          <ul class="nav__list" id="menu-principal">
-            <li><a class="nav__link" href="#beneficios">Benefícios</a></li>
-            <li><a class="nav__link" href="#modalidades">Modalidades</a></li>
-            <li>
-              <a class="nav__link" href="#como-funciona">Como funciona</a>
-            </li>
-            <li><a class="nav__link" href="#faq">Perguntas</a></li>
-          </ul>
-        </nav>
-
-        <a
-          href="#interesse"
-          class="button button--primary button--small header-cta"
-          >Quero testar</a
-        >
-      </div>
-    </header>
-
-    <main id="inicio">
-      <!-- ====================== HERO ====================== -->
-      <section class="hero" aria-labelledby="hero-titulo">
-        <div class="container hero__inner">
-          <div>
-            <span class="eyebrow">Plataforma fictícia de fitness</span>
-            <h1 id="hero-titulo" class="hero__title">
-              Seu próximo nível começa com <span>consistência.</span>
-            </h1>
-            <p class="hero__subtitle text-muted">
-              Conheça modalidades de treino, organize sua rotina e acompanhe seu
-              ritmo semana após semana, sem complicação.
-            </p>
-            <div class="hero__actions">
-              <a href="#interesse" class="button button--primary"
-                >Quero conhecer</a
-              >
-              <a href="#modalidades" class="button button--secondary"
-                >Ver modalidades</a
-              >
+            <div class="hero-image-label">
+              <strong>Seu ritmo. Sua evolução.</strong>
+              <span>Pequenas escolhas, feitas com consistência.</span>
             </div>
           </div>
-
-          <!-- Imagem: SVG inline (sem arquivo externo). role="img" + aria-label fazem o papel do alt -->
-          <figure class="hero__visual">
-            <svg
-              viewBox="0 0 400 300"
-              role="img"
-              aria-label="Ilustração de um painel com anel de progresso e barras de treino ao longo da semana"
-            >
-              <circle
-                cx="110"
-                cy="105"
-                r="62"
-                fill="none"
-                stroke="#2E352F"
-                stroke-width="14"
-              />
-              <circle
-                cx="110"
-                cy="105"
-                r="62"
-                fill="none"
-                stroke="#C6F36B"
-                stroke-width="14"
-                stroke-linecap="round"
-                stroke-dasharray="290 390"
-                transform="rotate(-90 110 105)"
-              />
-              <path
-                d="M92 105h12l8-18 10 36 8-18h12"
-                fill="none"
-                stroke="#F4F5F0"
-                stroke-width="5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <text
-                x="220"
-                y="80"
-                fill="#F4F5F0"
-                font-size="20"
-                font-weight="700"
-              >
-                Sua semana
-              </text>
-              <text x="220" y="104" fill="#A7AEA5" font-size="13">
-                Exemplo ilustrativo
-              </text>
-              <g fill="#2E352F">
-                <rect x="30" y="210" width="34" height="50" rx="6" />
-                <rect
-                  x="82"
-                  y="190"
-                  width="34"
-                  height="70"
-                  rx="6"
-                  fill="#C6F36B"
-                />
-                <rect x="134" y="225" width="34" height="35" rx="6" />
-                <rect
-                  x="186"
-                  y="170"
-                  width="34"
-                  height="90"
-                  rx="6"
-                  fill="#C6F36B"
-                />
-                <rect x="238" y="200" width="34" height="60" rx="6" />
-                <rect
-                  x="290"
-                  y="180"
-                  width="34"
-                  height="80"
-                  rx="6"
-                  fill="#C6F36B"
-                />
-                <rect x="342" y="235" width="34" height="25" rx="6" />
-              </g>
-            </svg>
-            <figcaption class="hero__caption text-muted">
-              Ilustração demonstrativa. Os dados não são reais.
-            </figcaption>
-          </figure>
-        </div>
-      </section>
-
-      <!-- ====================== BENEFÍCIOS ====================== -->
-      <section
-        class="section section--alt"
-        id="beneficios"
-        aria-labelledby="beneficios-titulo"
-      >
-        <div class="container">
-          <div class="section-header">
-            <span class="eyebrow">Benefícios</span>
-            <h2 id="beneficios-titulo" class="section-title">
-              Tudo para manter o ritmo
-            </h2>
-            <p class="section-description">
-              Ferramentas simples para você treinar com mais clareza e menos
-              improviso.
-            </p>
-          </div>
-
-          <!-- .grid + .grid--4: o mesmo componente de grade serve para qualquer lista de cards -->
-          <div class="grid grid--4">
-            <article class="card benefit">
-              <div class="icon-box">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <rect x="4" y="5" width="16" height="15" rx="2" />
-                  <path d="M8 3v4M16 3v4M4 10h16" />
-                </svg>
-              </div>
-              <h3>Treinos organizados</h3>
-              <p>Planeje seus dias de treino em um só lugar.</p>
-            </article>
-            <article class="card benefit">
-              <div class="icon-box">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <rect x="3" y="3" width="7" height="7" rx="1" />
-                  <rect x="14" y="3" width="7" height="7" rx="1" />
-                  <rect x="3" y="14" width="7" height="7" rx="1" />
-                  <rect x="14" y="14" width="7" height="7" rx="1" />
-                </svg>
-              </div>
-              <h3>Modalidades variadas</h3>
-              <p>Explore diferentes estilos até achar o seu.</p>
-            </article>
-            <article class="card benefit">
-              <div class="icon-box">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M4 12a8 8 0 0 1 14-5l2 2M20 12a8 8 0 0 1-14 5l-2-2"
-                  />
-                  <path d="M20 4v5h-5M4 20v-5h5" />
-                </svg>
-              </div>
-              <h3>Rotina adaptável</h3>
-              <p>Ajuste o plano quando a semana mudar.</p>
-            </article>
-            <article class="card benefit">
-              <div class="icon-box">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />
-                </svg>
-              </div>
-              <h3>Consistência visível</h3>
-              <p>Acompanhe sua frequência sem cobranças.</p>
-            </article>
+          <div class="floating-tag">
+            <span class="icon-box" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 17l5-5 3 3 7-8"></path><path d="M14 7h5v5"></path>
+              </svg>
+            </span>
+            <span><strong>Progresso com propósito</strong><small>Um treino de cada vez</small></span>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- ====================== MODALIDADES ====================== -->
-      <section
-        class="section"
-        id="modalidades"
-        aria-labelledby="modalidades-titulo"
-      >
-        <div class="container">
-          <div class="section-header">
-            <span class="eyebrow">Modalidades</span>
-            <h2 id="modalidades-titulo" class="section-title">
-              Escolha como se movimentar
-            </h2>
-            <p class="section-description">
-              Toque ou use o teclado para ver mais detalhes de cada modalidade.
-            </p>
-          </div>
+    <!-- Benefícios: cards com estrutura e espaçamentos reutilizados. -->
+    <section class="section" id="beneficios" aria-labelledby="benefits-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Menos complicação</span>
+          <h2 class="section-title" id="benefits-title">Treinar pode caber na sua rotina.</h2>
+          <p class="section-description">Uma experiência pensada para ajudar você a sair da intenção e encontrar um jeito mais organizado de se movimentar.</p>
+        </div>
 
-          <div class="grid grid--3">
-            <!-- O botão .toggle aponta (aria-controls) para o painel que ele abre. O JS cuida do resto. -->
-            <article class="card modality">
-              <div class="modality__visual">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M2 12h2M20 12h2M5 8v8M8 6v12M16 6v12M19 8v8M8 12h8"
-                  />
-                </svg>
-              </div>
+        <div class="grid benefits-grid">
+          <article class="card benefit-card">
+            <span class="icon-box" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2"></rect><path d="M8 3v4M16 3v4M4 10h16M8 14h3"></path></svg>
+            </span>
+            <h3>Treinos organizados</h3>
+            <p>Visualize suas opções e planeje os próximos passos sem complicar.</p>
+          </article>
+
+          <article class="card benefit-card">
+            <span class="icon-box" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v16M18 4v16M3 8h6M15 8h6M3 16h6M15 16h6"></path><path d="M9 12h6"></path></svg>
+            </span>
+            <h3>Modalidades variadas</h3>
+            <p>Explore força, condicionamento e mobilidade para diferentes objetivos.</p>
+          </article>
+
+          <article class="card benefit-card">
+            <span class="icon-box" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+            </span>
+            <h3>Rotina adaptável</h3>
+            <p>Considere seu tempo disponível e escolha um ritmo sustentável.</p>
+          </article>
+
+          <article class="card benefit-card">
+            <span class="icon-box" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7l-9 10-4-4"></path><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"></path></svg>
+            </span>
+            <h3>Consistência possível</h3>
+            <p>Valorize a continuidade e os hábitos que você consegue manter.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modalidades: cada card revela detalhes por botão, toque ou teclado. -->
+    <section class="section modalities" id="modalidades" aria-labelledby="modalities-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Encontre seu movimento</span>
+          <h2 class="section-title" id="modalities-title">Uma modalidade para cada momento.</h2>
+          <p class="section-description">Conheça algumas possibilidades e veja qual delas faz mais sentido para seu objetivo atual.</p>
+        </div>
+
+        <div class="grid modalities-grid">
+          <article class="card modality-card">
+            <div class="modality-art" aria-hidden="true"><span class="modality-number">01</span></div>
+            <div class="modality-content">
               <h3>Força e musculação</h3>
-              <p class="modality__summary">
-                Treinos com cargas e repetições para ganhar força de forma
-                progressiva.
-              </p>
-              <div class="modality__details" id="detalhes-forca" hidden>
+              <p>Trabalhe força e resistência muscular com exercícios adequados ao seu nível.</p>
+              <div class="modality-details" id="details-forca" hidden>
                 <ul>
-                  <li><strong>Foco:</strong> força e resistência muscular.</li>
-                  <li>
-                    <strong>Formato:</strong> séries e repetições, com descanso
-                    entre elas.
-                  </li>
-                  <li>
-                    <strong>Bom para:</strong> quem quer progressão gradual.
-                  </li>
+                  <li>Exercícios com pesos ou resistência.</li>
+                  <li>Progressão gradual e técnica cuidadosa.</li>
+                  <li>Descanso planejado entre sessões.</li>
                 </ul>
               </div>
-              <button
-                class="toggle"
-                type="button"
-                aria-expanded="false"
-                aria-controls="detalhes-forca"
-                data-label-collapsed="Ver detalhes"
-                data-label-expanded="Ocultar detalhes"
-              >
-                <span class="toggle__text">Ver detalhes</span>
-                <svg
-                  class="toggle__icon"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="m6 9 6 6 6-6" />
-                </svg>
+              <button class="modality-toggle" type="button" aria-expanded="false" aria-controls="details-forca">
+                <span>Ver detalhes</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
               </button>
-            </article>
+            </div>
+          </article>
 
-            <article class="card modality">
-              <div class="modality__visual">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M13 2 4 14h7l-1 8 9-12h-7z" />
-                </svg>
-              </div>
+          <article class="card modality-card">
+            <div class="modality-art" aria-hidden="true"><span class="modality-number">02</span></div>
+            <div class="modality-content">
               <h3>Condicionamento físico</h3>
-              <p class="modality__summary">
-                Atividades que elevam o ritmo cardíaco e melhoram o fôlego no
-                dia a dia.
-              </p>
-              <div
-                class="modality__details"
-                id="detalhes-condicionamento"
-                hidden
-              >
+              <p>Combine atividades para desenvolver fôlego, ritmo e capacidade cardiovascular.</p>
+              <div class="modality-details" id="details-condicionamento" hidden>
                 <ul>
-                  <li>
-                    <strong>Foco:</strong> resistência cardiorrespiratória.
-                  </li>
-                  <li>
-                    <strong>Formato:</strong> circuitos, corrida leve ou
-                    intervalos.
-                  </li>
-                  <li>
-                    <strong>Bom para:</strong> quem busca energia e disposição.
-                  </li>
+                  <li>Caminhada, bicicleta ou circuitos.</li>
+                  <li>Intensidade ajustada à sua condição.</li>
+                  <li>Alternância entre esforço e recuperação.</li>
                 </ul>
               </div>
-              <button
-                class="toggle"
-                type="button"
-                aria-expanded="false"
-                aria-controls="detalhes-condicionamento"
-                data-label-collapsed="Ver detalhes"
-                data-label-expanded="Ocultar detalhes"
-              >
-                <span class="toggle__text">Ver detalhes</span>
-                <svg
-                  class="toggle__icon"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="m6 9 6 6 6-6" />
-                </svg>
+              <button class="modality-toggle" type="button" aria-expanded="false" aria-controls="details-condicionamento">
+                <span>Ver detalhes</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
               </button>
-            </article>
+            </div>
+          </article>
 
-            <article class="card modality">
-              <div class="modality__visual">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <circle cx="12" cy="5" r="2" />
-                  <path d="M12 7v6M5 10l7 3 7-3M9 21l3-8 3 8" />
-                </svg>
-              </div>
+          <article class="card modality-card">
+            <div class="modality-art" aria-hidden="true"><span class="modality-number">03</span></div>
+            <div class="modality-content">
               <h3>Mobilidade e flexibilidade</h3>
-              <p class="modality__summary">
-                Movimentos que ampliam a amplitude das articulações e ajudam na
-                recuperação.
-              </p>
-              <div class="modality__details" id="detalhes-mobilidade" hidden>
+              <p>Dedique tempo à amplitude de movimento, ao controle corporal e à recuperação.</p>
+              <div class="modality-details" id="details-mobilidade" hidden>
                 <ul>
-                  <li>
-                    <strong>Foco:</strong> amplitude de movimento e relaxamento.
-                  </li>
-                  <li>
-                    <strong>Formato:</strong> alongamentos e sequências
-                    controladas.
-                  </li>
-                  <li>
-                    <strong>Bom para:</strong> complementar outros treinos.
-                  </li>
+                  <li>Movimentos controlados e confortáveis.</li>
+                  <li>Exercícios de mobilidade articular.</li>
+                  <li>Alongamentos sem forçar a dor.</li>
                 </ul>
               </div>
-              <button
-                class="toggle"
-                type="button"
-                aria-expanded="false"
-                aria-controls="detalhes-mobilidade"
-                data-label-collapsed="Ver detalhes"
-                data-label-expanded="Ocultar detalhes"
-              >
-                <span class="toggle__text">Ver detalhes</span>
-                <svg
-                  class="toggle__icon"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="m6 9 6 6 6-6" />
-                </svg>
+              <button class="modality-toggle" type="button" aria-expanded="false" aria-controls="details-mobilidade">
+                <span>Ver detalhes</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
               </button>
-            </article>
-          </div>
+            </div>
+          </article>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- ====================== COMO FUNCIONA ====================== -->
-      <section
-        class="section section--alt"
-        id="como-funciona"
-        aria-labelledby="como-titulo"
-      >
-        <div class="container">
-          <div class="section-header">
-            <span class="eyebrow">Como funciona</span>
-            <h2 id="como-titulo" class="section-title">Três passos simples</h2>
-          </div>
-          <!-- <ol> porque a ordem importa; o número vem do contador CSS (.step::before) -->
-          <ol class="grid grid--3 steps">
-            <li class="card step">
-              <h3>Defina seu objetivo</h3>
-              <p>
-                Diga o que você quer alcançar: ganhar força, ter mais fôlego ou
-                se mover melhor.
-              </p>
-            </li>
-            <li class="card step">
-              <h3>Explore modalidades</h3>
-              <p>
-                Veja opções compatíveis com o tempo e a rotina que você tem.
-              </p>
-            </li>
-            <li class="card step">
-              <h3>Organize e acompanhe</h3>
-              <p>Monte sua semana de treinos e acompanhe sua consistência.</p>
-            </li>
-          </ol>
+    <!-- Etapas simples explicam a proposta sem prometer resultados garantidos. -->
+    <section class="section" id="como-funciona" aria-labelledby="steps-title">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Comece de onde está</span>
+          <h2 class="section-title" id="steps-title">Um plano simples. Mais clareza.</h2>
+          <p class="section-description">O FitFlow organiza a experiência em passos fáceis de entender para você planejar sua rotina com intenção.</p>
         </div>
-      </section>
 
-      <!-- ====================== CHAMADA PARA AÇÃO ====================== -->
-      <section class="section" aria-labelledby="cta-titulo">
-        <div class="container">
-          <div class="cta-box">
-            <h2 id="cta-titulo">Pronto para começar com leveza?</h2>
-            <p>
-              Deixe seu interesse no formulário abaixo. É uma demonstração, sem
-              cadastro real.
-            </p>
-            <a href="#interesse" class="button">Ir para o formulário</a>
-          </div>
+        <div class="grid steps-grid">
+          <article class="step-card">
+            <span class="step-number">PASSO 01</span>
+            <h3>Defina seu objetivo</h3>
+            <p>Pense no que deseja priorizar e no tempo real que tem disponível.</p>
+          </article>
+          <article class="step-card">
+            <span class="step-number">PASSO 02</span>
+            <h3>Explore possibilidades</h3>
+            <p>Conheça modalidades diferentes e escolha as que combinam com você.</p>
+          </article>
+          <article class="step-card">
+            <span class="step-number">PASSO 03</span>
+            <h3>Acompanhe sua rotina</h3>
+            <p>Organize seus treinos e observe sua consistência ao longo do tempo.</p>
+          </article>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- ====================== FAQ ====================== -->
-      <section
-        class="section section--alt"
-        id="faq"
-        aria-labelledby="faq-titulo"
-      >
-        <div class="container">
-          <div class="section-header">
-            <span class="eyebrow">Perguntas frequentes</span>
-            <h2 id="faq-titulo" class="section-title">Ficou com dúvida?</h2>
+    <!-- CTA intermediária leva ao formulário de interesse. -->
+    <section class="section" aria-label="Convite para conhecer o FitFlow">
+      <div class="container">
+        <div class="cta-panel">
+          <div class="cta-copy">
+            <span class="eyebrow">Seu próximo passo</span>
+            <h2>Comece com o que é possível hoje.</h2>
+            <p>Descubra uma forma mais organizada de pensar sua rotina de movimento, sem precisar fazer tudo de uma vez.</p>
           </div>
-
-          <div class="faq">
-            <!-- Cada pergunta é um <button> (acessível por teclado) ligado à resposta por aria-controls -->
-            <div class="card faq__item">
-              <h3>
-                <button
-                  class="faq__question"
-                  type="button"
-                  aria-expanded="false"
-                  aria-controls="faq-1"
-                >
-                  O FitFlow é uma plataforma real?
-                  <svg
-                    class="toggle__icon"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="m6 9 6 6 6-6" />
-                  </svg>
-                </button>
-              </h3>
-              <div class="faq__answer" id="faq-1" hidden>
-                Não. O FitFlow é um projeto fictício criado para estudo de
-                front-end.
-              </div>
-            </div>
-            <div class="card faq__item">
-              <h3>
-                <button
-                  class="faq__question"
-                  type="button"
-                  aria-expanded="false"
-                  aria-controls="faq-2"
-                >
-                  Preciso ter experiência para começar?
-                  <svg
-                    class="toggle__icon"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="m6 9 6 6 6-6" />
-                  </svg>
-                </button>
-              </h3>
-              <div class="faq__answer" id="faq-2" hidden>
-                Não. A ideia da proposta é ajudar tanto quem está começando
-                quanto quem já treina.
-              </div>
-            </div>
-            <div class="card faq__item">
-              <h3>
-                <button
-                  class="faq__question"
-                  type="button"
-                  aria-expanded="false"
-                  aria-controls="faq-3"
-                >
-                  Posso mudar minha rotina depois?
-                  <svg
-                    class="toggle__icon"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="m6 9 6 6 6-6" />
-                  </svg>
-                </button>
-              </h3>
-              <div class="faq__answer" id="faq-3" hidden>
-                Sim. A proposta é uma rotina adaptável, que acompanha as
-                mudanças da sua semana.
-              </div>
-            </div>
-            <div class="card faq__item">
-              <h3>
-                <button
-                  class="faq__question"
-                  type="button"
-                  aria-expanded="false"
-                  aria-controls="faq-4"
-                >
-                  O formulário envia meus dados?
-                  <svg
-                    class="toggle__icon"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="m6 9 6 6 6-6" />
-                  </svg>
-                </button>
-              </h3>
-              <div class="faq__answer" id="faq-4" hidden>
-                Não. É apenas uma demonstração local: nada é enviado a servidor
-                nem armazenado.
-              </div>
-            </div>
-          </div>
+          <a class="button" href="#interesse">Tenho interesse <span aria-hidden="true">↗</span></a>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- ====================== FORMULÁRIO ====================== -->
-      <section
-        class="section"
-        id="interesse"
-        aria-labelledby="interesse-titulo"
-      >
-        <div class="container">
-          <div class="section-header">
-            <span class="eyebrow">Formulário de interesse</span>
-            <h2 id="interesse-titulo" class="section-title">
-              Conte o que você procura
-            </h2>
-            <p class="section-description">
-              Demonstração local: os dados não saem do seu navegador.
-            </p>
-          </div>
+    <!-- FAQ acessível: o JavaScript mantém aria-expanded sincronizado. -->
+    <section class="section" id="faq" aria-labelledby="faq-title">
+      <div class="container faq-layout">
+        <div class="faq-intro">
+          <span class="eyebrow">Perguntas frequentes</span>
+          <h2 class="section-title" id="faq-title">Ficou com alguma dúvida?</h2>
+          <p>Veja respostas rápidas sobre a proposta demonstrativa do FitFlow.</p>
+        </div>
 
-          <!-- novalidate desliga as mensagens nativas do navegador para usarmos as nossas -->
-          <form class="form" id="form-interesse" novalidate>
-            <div class="form-field">
-              <label for="nome">Nome</label>
-              <input
-                class="form-control"
-                type="text"
-                id="nome"
-                name="nome"
-                autocomplete="name"
-                required
-                aria-describedby="nome-erro"
-              />
-              <span class="field-error" id="nome-erro"></span>
+        <div class="faq-list">
+          <article class="faq-item">
+            <h3>
+              <button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-answer-1">
+                O que é o FitFlow?
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+              </button>
+            </h3>
+            <div class="faq-answer" id="faq-answer-1" hidden>
+              <p>O FitFlow é um conceito fictício de plataforma para explorar modalidades e organizar hábitos de treino. Esta página é um protótipo de front-end.</p>
+            </div>
+          </article>
+
+          <article class="faq-item">
+            <h3>
+              <button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-answer-2">
+                Preciso ter experiência para começar?
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+              </button>
+            </h3>
+            <div class="faq-answer" id="faq-answer-2" hidden>
+              <p>Não é necessário ter experiência para conhecer as modalidades. Ajuste a atividade ao seu nível e procure orientação profissional quando necessário.</p>
+            </div>
+          </article>
+
+          <article class="faq-item">
+            <h3>
+              <button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-answer-3">
+                O FitFlow cria treinos personalizados?
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+              </button>
+            </h3>
+            <div class="faq-answer" id="faq-answer-3" hidden>
+              <p>Nesta versão, não. A página apresenta a ideia do produto, mas não gera planos de treino nem substitui a avaliação de um profissional de educação física.</p>
+            </div>
+          </article>
+
+          <article class="faq-item">
+            <h3>
+              <button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-answer-4">
+                O formulário envia meus dados?
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+              </button>
+            </h3>
+            <div class="faq-answer" id="faq-answer-4" hidden>
+              <p>Não. O formulário funciona apenas no navegador para demonstrar validação e feedback. Os dados não são enviados a um servidor nem armazenados por esta página.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Formulário local: valida os campos e mostra uma confirmação demonstrativa. -->
+    <section class="section form-section" id="interesse" aria-labelledby="form-title">
+      <div class="container form-layout">
+        <div class="form-intro">
+          <span class="eyebrow">Conheça a proposta</span>
+          <h2 class="section-title" id="form-title">Vamos começar pelo seu objetivo?</h2>
+          <p>Preencha os campos para experimentar o fluxo do formulário. Esta demonstração não envia nem guarda suas informações.</p>
+          <p class="text-muted">Os campos são usados somente para mostrar como uma validação de formulário pode funcionar no front-end.</p>
+        </div>
+
+        <form class="card form-card" id="interest-form" novalidate>
+          <div class="form-grid">
+            <div class="form-field form-field--full">
+              <label for="name">Nome</label>
+              <input id="name" name="name" type="text" autocomplete="name" placeholder="Como podemos chamar você?" required aria-describedby="name-error">
+              <span class="field-error" id="name-error"></span>
             </div>
 
-            <div class="form-field">
+            <div class="form-field form-field--full">
               <label for="email">E-mail</label>
-              <input
-                class="form-control"
-                type="email"
-                id="email"
-                name="email"
-                autocomplete="email"
-                required
-                aria-describedby="email-erro"
-              />
-              <span class="field-error" id="email-erro"></span>
+              <input id="email" name="email" type="email" autocomplete="email" placeholder="voce@exemplo.com" required aria-describedby="email-error">
+              <span class="field-error" id="email-error"></span>
             </div>
 
-            <div class="form-field">
-              <label for="objetivo">Objetivo de treino</label>
-              <select
-                class="form-control"
-                id="objetivo"
-                name="objetivo"
-                required
-                aria-describedby="objetivo-erro"
-              >
+            <div class="form-field form-field--full">
+              <label for="goal">Qual é seu principal objetivo?</label>
+              <select id="goal" name="goal" required aria-describedby="goal-error">
                 <option value="">Selecione uma opção</option>
-                <option value="forca">Ganhar força</option>
-                <option value="condicionamento">
-                  Melhorar o condicionamento
-                </option>
-                <option value="mobilidade">Ganhar mobilidade</option>
-                <option value="rotina">Criar uma rotina constante</option>
+                <option value="forca">Desenvolver força</option>
+                <option value="condicionamento">Melhorar o condicionamento</option>
+                <option value="mobilidade">Trabalhar mobilidade e flexibilidade</option>
+                <option value="consistencia">Criar uma rotina consistente</option>
+                <option value="explorar">Ainda estou explorando</option>
               </select>
-              <span class="field-error" id="objetivo-erro"></span>
+              <span class="field-error" id="goal-error"></span>
             </div>
 
-            <div class="form-field">
-              <div class="form-check">
-                <input
-                  type="checkbox"
-                  id="consentimento"
-                  name="consentimento"
-                  required
-                  aria-describedby="consentimento-erro"
-                />
-                <label for="consentimento"
-                  >Entendo que esta é uma demonstração e que nenhum dado será
-                  enviado.</label
-                >
-              </div>
-              <span class="field-error" id="consentimento-erro"></span>
+            <div class="form-field form-field--full">
+              <label class="consent-row" for="consent">
+                <input id="consent" name="consent" type="checkbox" required aria-describedby="consent-error">
+                <span>Entendo que este é um formulário demonstrativo e que meus dados não serão enviados nem armazenados.</span>
+              </label>
+              <span class="field-error" id="consent-error"></span>
             </div>
+          </div>
 
-            <!-- role="status" faz leitores de tela anunciarem a mensagem quando ela aparece -->
-            <p class="form-status" id="form-status" role="status" hidden></p>
+          <button class="button button--primary form-submit" type="submit">Testar formulário <span aria-hidden="true">↗</span></button>
+          <p class="form-note">Demonstração local • Nenhum envio para servidor</p>
+          <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
+        </form>
+      </div>
+    </section>
+  </main>
 
-            <button type="submit" class="button button--primary">
-              Enviar interesse
-            </button>
-          </form>
+  <!-- Rodapé com atalhos internos válidos. -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <a class="brand" href="#inicio" aria-label="FitFlow — voltar ao início">
+            <span class="brand-mark" aria-hidden="true">F</span>
+            <span>Fit<span>Flow</span></span>
+          </a>
+          <p>Mais clareza para planejar seus treinos. Um passo de cada vez.</p>
         </div>
-      </section>
-    </main>
 
-    <!-- ====================== RODAPÉ ====================== -->
-    <footer class="site-footer">
-      <div class="container site-footer__inner">
-        <div>
-          <p class="logo">Fit<span>Flow</span></p>
-          <p class="text-muted">
-            Projeto fictício de landing page fitness, criado para estudo de
-            HTML, CSS e JavaScript.
-          </p>
-        </div>
-        <nav aria-label="Rodapé">
-          <ul class="footer-links">
-            <li><a href="#beneficios">Benefícios</a></li>
-            <li><a href="#modalidades">Modalidades</a></li>
-            <li><a href="#como-funciona">Como funciona</a></li>
-            <li><a href="#faq">Perguntas</a></li>
-            <li><a href="#interesse">Contato</a></li>
-          </ul>
+        <nav class="footer-links" aria-label="Links do rodapé">
+          <a href="#beneficios">Benefícios</a>
+          <a href="#modalidades">Modalidades</a>
+          <a href="#faq">Perguntas frequentes</a>
+          <a href="#interesse">Formulário</a>
         </nav>
       </div>
-    </footer>
 
-    <script>
-      /* =====================================================================
-       JAVASCRIPT
-       Cada funcionalidade é uma função com uma única responsabilidade.
-       As funções são chamadas no final do arquivo, depois que o HTML já existe.
-       'use strict' faz o navegador acusar alguns erros comuns de código.
-       ===================================================================== */
-      "use strict";
+      <div class="footer-bottom">
+        <span>© <span id="current-year">2026</span> FitFlow. Projeto demonstrativo.</span>
+        <span>Feito para aprender e evoluir.</span>
+      </div>
+    </div>
+  </footer>
 
-      /* ---------------------------------------------------------------------
-       1. MENU RESPONSIVO
-       Estratégia: o CSS esconde/mostra o menu conforme a classe .is-open.
-       O JS só troca a classe e mantém os atributos ARIA sincronizados.
-       --------------------------------------------------------------------- */
-      function initMenu() {
-        const toggle = document.querySelector(".nav__toggle");
-        const menu = document.querySelector("#menu-principal");
-        if (!toggle || !menu) return; // proteção: se faltar algo no HTML, não quebra
+  <script>
+    /* =========================================================
+       1. SELEÇÃO DE ELEMENTOS DO DOM
+       O DOM é a representação da página que o JavaScript consegue
+       consultar e modificar. Guardamos os elementos usados mais
+       de uma vez em constantes para deixar o código mais legível.
+       ========================================================= */
+    const menuToggle = document.querySelector(".menu-toggle");
+    const siteNav = document.querySelector("#site-nav");
+    const navLinks = document.querySelectorAll(".site-nav .nav-link");
+    const modalityButtons = document.querySelectorAll(".modality-toggle");
+    const faqButtons = document.querySelectorAll(".faq-question");
+    const interestForm = document.querySelector("#interest-form");
+    const formStatus = document.querySelector("#form-status");
 
-        // Única função que altera o estado; todas as ações abaixo a reutilizam
-        function setMenuOpen(isOpen) {
-          menu.classList.toggle("is-open", isOpen);
-          toggle.setAttribute("aria-expanded", String(isOpen));
-          toggle.setAttribute(
-            "aria-label",
-            isOpen ? "Fechar menu" : "Abrir menu",
-          );
+    /* =========================================================
+       2. MENU RESPONSIVO
+       Uma única função atualiza classe, atributo acessível e rótulo.
+       O mesmo comportamento é reutilizado para abrir e fechar.
+       ========================================================= */
+    function setMenuOpen(isOpen) {
+      siteNav.classList.toggle("is-open", isOpen);
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
+      menuToggle.setAttribute("aria-label", isOpen ? "Fechar menu" : "Abrir menu");
+      document.body.classList.toggle("menu-open", isOpen);
+    }
+
+    menuToggle.addEventListener("click", () => {
+      const isCurrentlyOpen = menuToggle.getAttribute("aria-expanded") === "true";
+      setMenuOpen(!isCurrentlyOpen);
+    });
+
+    // Ao escolher um destino, o menu fecha para não cobrir o conteúdo.
+    navLinks.forEach((link) => {
+      link.addEventListener("click", () => setMenuOpen(false));
+    });
+
+    // Se a janela passar ao layout desktop, remove o estado do menu mobile.
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 760) {
+        setMenuOpen(false);
+      }
+    });
+
+    // Escape fecha o menu quando ele estiver aberto.
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && menuToggle.getAttribute("aria-expanded") === "true") {
+        setMenuOpen(false);
+        menuToggle.focus();
+      }
+    });
+
+    /* =========================================================
+       3. CARDS DE MODALIDADES
+       Cada botão aponta para seu painel por aria-controls. Isso evita
+       depender de posições fixas ou de IDs construídos no código.
+       ========================================================= */
+    modalityButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const detailsId = button.getAttribute("aria-controls");
+        const detailsPanel = document.getElementById(detailsId);
+        const isExpanded = button.getAttribute("aria-expanded") === "true";
+        const nextExpandedState = !isExpanded;
+
+        button.setAttribute("aria-expanded", String(nextExpandedState));
+        detailsPanel.hidden = !nextExpandedState;
+        button.closest(".modality-card").classList.toggle("is-expanded", nextExpandedState);
+        button.querySelector("span").textContent = nextExpandedState ? "Ocultar detalhes" : "Ver detalhes";
+      });
+    });
+
+    /* =========================================================
+       4. PERGUNTAS FREQUENTES
+       Mantemos somente uma resposta aberta por vez para a interação
+       permanecer previsível em telas pequenas e grandes.
+       ========================================================= */
+    faqButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const wasExpanded = button.getAttribute("aria-expanded") === "true";
+
+        faqButtons.forEach((otherButton) => {
+          const answerId = otherButton.getAttribute("aria-controls");
+          const answer = document.getElementById(answerId);
+          otherButton.setAttribute("aria-expanded", "false");
+          answer.hidden = true;
+        });
+
+        if (!wasExpanded) {
+          const answer = document.getElementById(button.getAttribute("aria-controls"));
+          button.setAttribute("aria-expanded", "true");
+          answer.hidden = false;
         }
+      });
+    });
 
-        toggle.addEventListener("click", () => {
-          setMenuOpen(toggle.getAttribute("aria-expanded") !== "true");
-        });
+    /* =========================================================
+       5. VALIDAÇÃO DO FORMULÁRIO
+       As funções abaixo são pequenas e específicas:
+       - setFieldError mostra/limpa um erro;
+       - isValidEmail verifica um formato básico;
+       - validateForm verifica os campos antes de exibir sucesso.
+       A validação do navegador e esta validação personalizada se
+       complementam; nenhuma delas envia dados a um servidor.
+       ========================================================= */
+    const formFields = {
+      name: document.querySelector("#name"),
+      email: document.querySelector("#email"),
+      goal: document.querySelector("#goal"),
+      consent: document.querySelector("#consent")
+    };
 
-        // Fecha ao escolher um link (event delegation: um ouvinte na lista inteira)
-        menu.addEventListener("click", (event) => {
-          if (event.target.closest("a")) setMenuOpen(false);
-        });
+    const fieldErrors = {
+      name: document.querySelector("#name-error"),
+      email: document.querySelector("#email-error"),
+      goal: document.querySelector("#goal-error"),
+      consent: document.querySelector("#consent-error")
+    };
 
-        // Fecha com Esc e devolve o foco ao botão
-        document.addEventListener("keydown", (event) => {
-          if (event.key === "Escape" && menu.classList.contains("is-open")) {
-            setMenuOpen(false);
-            toggle.focus();
-          }
-        });
+    function setFieldError(fieldName, message) {
+      const field = formFields[fieldName];
+      fieldErrors[fieldName].textContent = message;
+      field.setAttribute("aria-invalid", String(Boolean(message)));
+    }
 
-        // Se a tela passar a ser "desktop", reinicia o estado do menu móvel
-        const desktopQuery = window.matchMedia("(min-width: 900px)");
-        desktopQuery.addEventListener("change", (event) => {
-          if (event.matches) setMenuOpen(false);
-        });
+    function isValidEmail(email) {
+      // É uma checagem prática para o exemplo, não uma verificação
+      // completa de existência ou recebimento real do endereço.
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function validateForm() {
+      let isValid = true;
+      const nameValue = formFields.name.value.trim();
+      const emailValue = formFields.email.value.trim();
+
+      if (nameValue.length < 2) {
+        setFieldError("name", "Informe um nome com pelo menos 2 caracteres.");
+        isValid = false;
+      } else {
+        setFieldError("name", "");
       }
 
-      /* ---------------------------------------------------------------------
-       2. BOTÕES DE EXPANDIR/RECOLHER (cards de modalidades e FAQ)
-       Reutilização: o mesmo código atende os dois componentes, porque ambos
-       seguem o padrão <button aria-controls="id"> + painel com atributo hidden.
-       --------------------------------------------------------------------- */
-      function setExpanded(button, isExpanded) {
-        const panel = document.getElementById(
-          button.getAttribute("aria-controls"),
-        );
-        if (!panel) return;
+      if (!isValidEmail(emailValue)) {
+        setFieldError("email", "Digite um e-mail em formato válido, como voce@exemplo.com.");
+        isValid = false;
+      } else {
+        setFieldError("email", "");
+      }
 
-        button.setAttribute("aria-expanded", String(isExpanded)); // informa o estado
-        panel.hidden = !isExpanded; // mostra/esconde
+      if (!formFields.goal.value) {
+        setFieldError("goal", "Selecione seu objetivo.");
+        isValid = false;
+      } else {
+        setFieldError("goal", "");
+      }
 
-        // Troca o texto do botão, se ele tiver rótulos definidos em data-*
-        const label = button.querySelector(".toggle__text");
-        if (label && button.dataset.labelExpanded) {
-          label.textContent = isExpanded
-            ? button.dataset.labelExpanded
-            : button.dataset.labelCollapsed;
+      if (!formFields.consent.checked) {
+        setFieldError("consent", "Marque a confirmação para continuar.");
+        isValid = false;
+      } else {
+        setFieldError("consent", "");
+      }
+
+      return isValid;
+    }
+
+    // Enquanto a pessoa corrige um campo, limpamos seu erro individual.
+    Object.entries(formFields).forEach(([fieldName, field]) => {
+      const eventName = field.type === "checkbox" || field.tagName === "SELECT" ? "change" : "input";
+      field.addEventListener(eventName, () => {
+        setFieldError(fieldName, "");
+        formStatus.textContent = "";
+        formStatus.className = "form-status";
+      });
+    });
+
+    interestForm.addEventListener("submit", (event) => {
+      // Impede a navegação/recarregamento padrão do formulário HTML.
+      event.preventDefault();
+      formStatus.textContent = "";
+      formStatus.className = "form-status";
+
+      if (!validateForm()) {
+        formStatus.textContent = "Revise os campos destacados antes de continuar.";
+        formStatus.classList.add("is-error");
+
+        const firstInvalidField = interestForm.querySelector('[aria-invalid="true"]');
+        if (firstInvalidField) {
+          firstInvalidField.focus();
         }
+        return;
       }
 
-      function initToggles() {
-        const buttons = document.querySelectorAll(".toggle, .faq__question");
-        buttons.forEach((button) => {
-          // O evento "click" do <button> também dispara com Enter e Espaço (teclado) e com toque
-          button.addEventListener("click", () => {
-            const isOpen = button.getAttribute("aria-expanded") === "true";
-            setExpanded(button, !isOpen);
-          });
-        });
-      }
+      // Não há fetch, backend nem armazenamento: é só uma confirmação local.
+      const firstName = formFields.name.value.trim().split(/\s+/)[0];
+      formStatus.textContent = `Tudo certo, ${firstName}! A validação demonstrativa foi concluída. Nenhum dado foi enviado ou armazenado.`;
+      formStatus.classList.add("is-success");
+      interestForm.reset();
 
-      /* ---------------------------------------------------------------------
-       3. FORMULÁRIO: VALIDAÇÃO E FEEDBACK
-       Cada campo tem uma regra em 'rules'. A regra devolve uma mensagem de erro,
-       ou texto vazio quando o valor é válido.
-       --------------------------------------------------------------------- */
-      const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // algo@algo.algo
+      // Depois do reset, remove os estados de erro dos campos.
+      Object.keys(formFields).forEach((fieldName) => setFieldError(fieldName, ""));
+    });
 
-      const rules = {
-        nome: (field) =>
-          field.value.trim().length >= 2
-            ? ""
-            : "Informe seu nome (mínimo de 2 caracteres).",
-        email: (field) => {
-          const value = field.value.trim();
-          if (!value) return "Informe seu e-mail.";
-          return EMAIL_PATTERN.test(value)
-            ? ""
-            : "Use um formato válido, como nome@exemplo.com.";
-        },
-        objetivo: (field) =>
-          field.value ? "" : "Escolha um objetivo de treino.",
-        consentimento: (field) =>
-          field.checked ? "" : "Marque a caixa para continuar.",
-      };
-
-      // Mostra ou limpa o erro de UM campo, atualizando também os atributos ARIA
-      function showFieldError(field, message) {
-        const errorBox = document.getElementById(`${field.id}-erro`);
-        errorBox.textContent = message;
-        field.classList.toggle("is-invalid", Boolean(message));
-        if (message) {
-          field.setAttribute("aria-invalid", "true");
-        } else {
-          field.removeAttribute("aria-invalid");
-        }
-      }
-
-      // Valida UM campo e devolve true/false
-      function validateField(field) {
-        const message = rules[field.name](field);
-        showFieldError(field, message);
-        return message === "";
-      }
-
-      // Mostra a mensagem geral (sucesso ou erro) abaixo dos campos
-      function showFormStatus(statusBox, type, text) {
-        statusBox.hidden = false;
-        statusBox.className = `form-status is-${type}`;
-        statusBox.textContent = (type === "success" ? "✔ " : "⚠ ") + text; // ícone + cor
-      }
-
-      function initForm() {
-        const form = document.getElementById("form-interesse");
-        const statusBox = document.getElementById("form-status");
-        if (!form || !statusBox) return;
-
-        // Campos que possuem regra (os que têm o atributo name correspondente)
-        const fields = Array.from(form.elements).filter((el) => rules[el.name]);
-
-        // Valida ao sair do campo; depois de errado, revalida enquanto a pessoa digita
-        fields.forEach((field) => {
-          field.addEventListener("blur", () => validateField(field));
-          const liveEvent =
-            field.type === "checkbox" || field.tagName === "SELECT"
-              ? "change"
-              : "input";
-          field.addEventListener(liveEvent, () => {
-            if (field.classList.contains("is-invalid")) validateField(field);
-          });
-        });
-
-        form.addEventListener("submit", (event) => {
-          event.preventDefault(); // impede o recarregamento da página
-
-          // Valida TODOS os campos (map roda em todos; filter pega os inválidos)
-          const invalidFields = fields.filter((field) => !validateField(field));
-
-          if (invalidFields.length > 0) {
-            showFormStatus(
-              statusBox,
-              "error",
-              "Revise os campos destacados para continuar.",
-            );
-            invalidFields[0].focus(); // leva o foco ao primeiro erro
-            return; // interrompe: nada é processado
-          }
-
-          // Fluxo válido: apenas demonstrativo, sem rede e sem armazenamento
-          showFormStatus(
-            statusBox,
-            "success",
-            "Tudo certo! Esta é uma demonstração: nenhum dado foi enviado ou salvo.",
-          );
-          form.reset();
-          fields.forEach((field) => showFieldError(field, ""));
-        });
-      }
-
-      /* ---------------------------------------------------------------------
-       4. INICIALIZAÇÃO: liga tudo
-       --------------------------------------------------------------------- */
-      initMenu();
-      initToggles();
-      initForm();
-    </script>
-  </body>
+    /* Ano atualizado automaticamente para evitar editar o rodapé todo ano. */
+    document.querySelector("#current-year").textContent = new Date().getFullYear();
+  </script>
+</body>
 </html>
